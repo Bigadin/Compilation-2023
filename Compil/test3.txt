@@ -1,0 +1,26 @@
+LANGUAGE test
+
+
+VAR
+    A, B, C: INT;
+    D: FLOAT;
+    T: BOOL;
+    {un 
+
+
+
+
+
+
+
+
+    commentaire}
+
+
+BEGIN
+    if(D < T)
+    BEGIN
+         A = B+6
+    END
+
+END

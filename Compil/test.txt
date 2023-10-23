@@ -1,0 +1,45 @@
+LANGUAGE test
+
+
+BOOL function func1 
+{whatever }
+    VAR
+    A, B: BOOL;
+    A : INT;
+    C: FLOAT;
+    flag2: INT;
+    D = 3,  E = 56.36 : CONST FLOAT; 
+    F = false : CONST BOOL;
+
+    BEGIN
+        func_test1 = func_test1 - func_test2;
+        D = 5.9;
+        return F;
+    END
+
+BOOL function func2 
+    VAR
+        var1, var2, var3: INT;
+        var1 = 2: CONST INT;
+
+    BEGIN
+        return erreur;
+    END
+
+
+VAR
+    flag1, flag2, G, H : INT;
+
+BEGIN
+    if(flag1 == flag2)
+    BEGIN
+    END
+    while(flag1 < flag2)
+    BEGIN
+        B = B+flag1-8;
+        B = B + flag1/-8;
+        B = B + flag1/flag2;
+    END
+        
+         
+END

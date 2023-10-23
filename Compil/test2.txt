@@ -1,0 +1,12 @@
+LANGUAGE MiniAlgo
+
+
+VAR
+    x,y,z: INT;
+    D = -3.6,  E = 56.36 : CONST FLOAT;
+    F:BOOL; 
+BEGIN
+D=5;
+E=8;
+F= false ;
+END
