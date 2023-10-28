@@ -29,8 +29,7 @@
 %%
 
 input:
-line input
-|
+|line EOL input
 ;
 
 line:
@@ -41,23 +40,18 @@ line:
 ;
 
 
-
 AFFECTATION:
 |IDF ASSIG OPERATION SEMI {printf(" c'est une affectation  a = x \n");}
 |IDF ASSIG OPERATION SEP AFFECTATION {printf(" c'est une affectation a = b,a = x \n");}
-|IDF ASSIG VALUES SEP AFFECTATION {printf(" c'est une affectation a = 23,a = x \n");}
 
 OPERATION:
 EXPRESSION
 |OPERATION Opp OPERATION
 |EXPRESSION Opp EXPRESSION 
 
-
 EXPRESSION:
 VALUES
 |IDF
-
-
 
 Opp:
 |PLUS|MINUS|MULT|DIV|INCR|DECR|EG|SUP|LES|LESE|SUPE|AND|OR
@@ -68,8 +62,8 @@ FLOAT|INT|BOOL|CHAR|STRING
 VALUES:
 neg_FLOAT_val 
 |FLOAT_val 
-|_TRUE
-|_FALSE
+|_TRUE 
+|_FALSE 
 |neg_INT_val 
 |INT_val 
 |STRING_val 
