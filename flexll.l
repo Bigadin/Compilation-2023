@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include "parser.tab.h"
 typedef enum { false, true } bool;
-int line = 1;
+
+int nline = 1;
 bool error = false;
 %}
 
 %option noyywrap
+%option yylineno
 
 Chiffre [0-9]
 Lettre [a-zA-Z]
@@ -18,13 +20,12 @@ Space " "
 deb {"/*" | "{"}
 ffin {"*/" | "}"}
 
-int {Neg space}?{Nombre}+
-float {Neg space}?({Nombre}+|{Nombre}+"."{Nombre}+)
+int {Neg}?{Nombre}+
+float {Neg}?({Nombre}+|{Nombre}+"."{Nombre}+)
 char ['][^'][']
 string ["][^"]["]  
-const {Neg space}?({Nombre}+|{Nombre}+"."{Nombre}+)
 
-idf {Lettre}({underscore}?({Lettre}|{Chiffre})*)*
+idf {Lettre}({Underscore}?({Lettre}|{Chiffre})*)*
 commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 
 %%
@@ -35,19 +36,19 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "if" {return IF;}
 "while" {return WHILE;}
 "do" {return DO;}
-"float" {return FLOAT;}
-{float} {if(yytext[0] == '-'){return neg_FLOAT_val;} return FLOAT_val;}
 "bool" {return BOOL;}
-{bool} {return BOOL_val;}
+"vrai"|"true" {return _TRUE;}
+"faux"|"false" {return _FALSE;} 
 "int" {return INT;}
 {int} {if(yytext[0] == '-'){return neg_INT_val;} return INT_val;}
+"float" {return FLOAT;}
+{float} {if(yytext[0] == '-'){return neg_FLOAT_val;} return FLOAT_val;}
 "const" {return CONST;}
-{const} {printf("c'est une Const ::: %s \n",yytext);if(yytext[0] == '-'){return neg_CONST_val;};return CONST-val;}
 "string" {return STRING;}
-{string} {printf("string ::: %s\n",yytext); return STRING_val;}
+{string} {return STRING_val;}
 "char" {return CHAR;}
-{char} {printf("char ::: %s\n",yytext); return CHAR_val;}
-{idf} {printf("l'id est ::: %s\n",yytext);if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}return IDF;}
+{char} { return CHAR_val;}
+{idf} {if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}return IDF;}
 "=" {return ASSIG;}
 "+" {return PLUS;}  
 "-" {return MINUS;}  
@@ -64,10 +65,10 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "++" {return INCR;}
 "--" {return DECR;}
 ";" {return SEMI;}
-"," {return SEP};
+"," {return SEP;}
 [ \t]  {  }
-[\n] { line++; return EOL; }
-. { printf("Erreur Lexical :::: %s a la ligne ::: %d\n",yytext,line); error = true; return yytext[0]; }
+[\n] {printf("%d ",nline); nline++ ; return EOL; }
+. { printf("Erreur Lexical :::: %s a la ligne ::: %d\n",yytext,nline); error = true; return yytext[0]; }
 
 %%
 
@@ -85,7 +86,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     if(error){
-        printf("Erreur lexical a la ligne %d\n",line);
+        printf("Erreur lexical a la ligne %d\n",nline);
     }
         printf("Processing file: %s\n", argv[1]); // Print the name of the file being processed
     yyin = file; // yyin is a global variable provided by Flex to change the input source

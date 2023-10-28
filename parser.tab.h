@@ -49,17 +49,17 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    EOL = 258,
-    CHAR = 259,
-    STRING = 260,
-    CONST = 261,
-    IDF = 262,
-    PLUS = 263,
-    MINUS = 264,
-    MULT = 265,
-    DIV = 266,
-    VRAI = 267,
-    FAUX = 268,
+    CHAR = 258,
+    STRING = 259,
+    CONST = 260,
+    BOOL = 261,
+    INT = 262,
+    FLOAT = 263,
+    IDF = 264,
+    PLUS = 265,
+    MINUS = 266,
+    MULT = 267,
+    DIV = 268,
     EG = 269,
     SUP = 270,
     LES = 271,
@@ -67,14 +67,29 @@ extern int yydebug;
     SUPE = 273,
     AND = 274,
     OR = 275,
-    NOTEG = 276,
-    INCR = 277,
-    BEG = 278,
-    BOOL = 279,
-    INT = 280,
-    FLOAT = 281,
-    SEMI = 282,
-    END = 283
+    INCR = 276,
+    DECR = 277,
+    ASSIG = 278,
+    _TRUE = 279,
+    _FALSE = 280,
+    NOTEG = 281,
+    BEG = 282,
+    END = 283,
+    RETURN = 284,
+    SEMI = 285,
+    EOL = 286,
+    SEP = 287,
+    FOR = 288,
+    IF = 289,
+    WHILE = 290,
+    DO = 291,
+    neg_FLOAT_val = 292,
+    FLOAT_val = 293,
+    BOOL_val = 294,
+    neg_INT_val = 295,
+    INT_val = 296,
+    STRING_val = 297,
+    CHAR_val = 298
   };
 #endif
 
@@ -82,12 +97,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 6 "parser.y"
+#line 7 "parser.y"
 
     int num;
     char sym;
 
-#line 91 "parser.tab.h"
+#line 106 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

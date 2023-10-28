@@ -1,4 +1,5 @@
 %{
+#include <stdio.h>
 
 %}
 
@@ -14,79 +15,92 @@
 
 %token PLUS MINUS MULT DIV EG SUP LES LESE SUPE AND OR INCR  DECR ASSIG
 
-%token VRAI FAUX
+%token _TRUE _FALSE
 
 %token NOTEG
 
 %token BEG END RETURN SEMI EOL SEP
 
-%TOKEN FOR IF WHILE DO
+%token FOR IF WHILE DO
 
-%TOKEN neg_FLOAT_val FLOAT_val BOOL_val neg_INT_val INT_val neg_CONST_val CONST-val STRING_val CHAR_val
-
-
+%token neg_FLOAT_val FLOAT_val BOOL_val neg_INT_val INT_val STRING_val CHAR_val
 
 
 %%
 
 
 input:
-|line input{printf(" \n\n\n  aaaaaaaaaaaaaaaa \n\n\n\n");}
+|line input
 ;
 
 line:
-|DECLARATION  {printf(" c'est une declaration \n");}
-|AFFECTATION  {printf(" c'est une affectation \n");}
+|DECLARATION  {printf(" c'est une declaration  \n");}
+|AFFECTATION  
 |EOL
 ;
 
-VALUES:
-|neg_FLOAT_val 
-|FLOAT_val 
-|BOOL_val 
-|neg_INT_val 
-|INT_val 
-|neg_CONST_val 
-|CONST-val 
-|STRING_val 
-|CHAR_val
+
 
 DECLARATION:
 |type AFFECTATION
 |CONST type AFFECTATION
 
 AFFECTATION:
-|IDF ASSIG OPERATION SEMI
-|IDF ASSIG OPERATION SEP AFFECTATION
-|IDF ASSIG VALUES SEMI
-|IDF ASSIG VALUES SEP AFFECTATION
-|IDF ASSIG IDF SEMI
-|IDF ASSIG IDF SEP AFFECTATION
-
-type:
-|FLOAT|INT|BOOL|CHAR|STRING
-
+|IDF ASSIG OPERATION SEMI {printf(" c'est une affectation  a = x \n");}
+|IDF ASSIG OPERATION SEP AFFECTATION {printf(" c'est une affectation a = b,a = x \n");}
+|IDF ASSIG VALUES SEP AFFECTATION {printf(" c'est une affectation a = 23,a = x \n");}
 
 OPERATION:
-EXPRESSION Opp EXPRESSION 
+//|EXPRESSION
+//|OPERATION Opp OPERATION
+//|EXPRESSION Opp EXPRESSION 
+
 
 EXPRESSION:
 |VALUES
 |IDF
 
 
+
 Opp:
-PLUS|MINUS|MULT|DIV|INCR|DECR|EG|SUP|LES|LESE|SUPE|AND|OR
+|PLUS|MINUS|MULT|DIV|INCR|DECR|EG|SUP|LES|LESE|SUPE|AND|OR
+
+type:
+|FLOAT|INT|BOOL|CHAR|STRING
+
+VALUES:
+|neg_FLOAT_val 
+|FLOAT_val 
+|_TRUE
+|_FALSE
+|neg_INT_val 
+|INT_val 
+|STRING_val 
+|CHAR_val
 
 %%
 
+
 int main(int argc, char *argv[]) {
-    yyparse(); // this will call the lexer on the provided file
+    if (argc != 2) {
+        printf("Usage: %s <input_file>\n", argv[0]);
+        return 1;
+    }
+
+    FILE *file = freopen(argv[1], "r", stdin);
+    if (file == NULL) {
+        perror("Error");
+        return 1;
+    }
+
+    yyparse();
+
+    fclose(file);
     return 0;
 }
 
 int yyerror(char* s){
-    printf("%s\n",s);
+    printf("%s  \n",s);
     return 0;
 }
 
