@@ -8,32 +8,22 @@
     char sym;
 }
 
-%token EOL
-%token CHAR
-%token STRING
-%token CONST
+%token CHAR STRING CONST BOOL INT FLOAT
+
 %token IDF
-%token PLUS   
-%token MINUS   
-%token MULT   
-%token DIV
-%token VRAI  
-%token FAUX 
-%token EG 
-%token SUP 
-%token LES    
-%token LESE    
-%token SUPE
-%token AND  
-%token OR
+
+%token PLUS MINUS MULT DIV EG SUP LES LESE SUPE AND OR INCR  DECR ASSIG
+
+%token VRAI FAUX
+
 %token NOTEG
-%token INCR
-%token BEG
-%token BOOL
-%token INT
-%token FLOAT
-%token SEMI
-%token END
+
+%token BEG END RETURN SEMI EOL SEP
+
+%TOKEN FOR IF WHILE DO
+
+%TOKEN neg_FLOAT_val FLOAT_val BOOL_val neg_INT_val INT_val neg_CONST_val CONST-val STRING_val CHAR_val
+
 
 
 
@@ -45,31 +35,48 @@ input:
 ;
 
 line:
- DECLARATION  {printf(" c'est une declaration \n");}|AFFECTATION  {printf(" c'est une affectation \n");}
+|DECLARATION  {printf(" c'est une declaration \n");}
+|AFFECTATION  {printf(" c'est une affectation \n");}
 |EOL
 ;
 
+VALUES:
+|neg_FLOAT_val 
+|FLOAT_val 
+|BOOL_val 
+|neg_INT_val 
+|INT_val 
+|neg_CONST_val 
+|CONST-val 
+|STRING_val 
+|CHAR_val
+
 DECLARATION:
- type IDF EG CONST SEMI
-|type IDF SEMI
-|type IDF EG IDF SEMI
+|type AFFECTATION
+|CONST type AFFECTATION
 
 AFFECTATION:
-IDF EG OPERATION SEMI
-|IDF EG CONST SEMI
-|IDF EG IDF SEMI
+|IDF ASSIG OPERATION SEMI
+|IDF ASSIG OPERATION SEP AFFECTATION
+|IDF ASSIG VALUES SEMI
+|IDF ASSIG VALUES SEP AFFECTATION
+|IDF ASSIG IDF SEMI
+|IDF ASSIG IDF SEP AFFECTATION
 
 type:
-FLOAT|INT|BOOL
+|FLOAT|INT|BOOL|CHAR|STRING
+
 
 OPERATION:
-OPERATION Opp OPERATION 
-|CONST
+EXPRESSION Opp EXPRESSION 
+
+EXPRESSION:
+|VALUES
 |IDF
 
 
 Opp:
-PLUS|MINUS|MULT|DIV|INCR
+PLUS|MINUS|MULT|DIV|INCR|DECR|EG|SUP|LES|LESE|SUPE|AND|OR
 
 %%
 
