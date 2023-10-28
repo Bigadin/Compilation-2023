@@ -17,8 +17,6 @@ Nombre [1-9][0-9]*|0
 Underscore "_"
 Neg "-"
 Space " "
-deb {"/*" | "{"}
-ffin {"*/" | "}"}
 
 int {Neg}?{Nombre}+
 float {Neg}?({Nombre}+|{Nombre}+"."{Nombre}+)
