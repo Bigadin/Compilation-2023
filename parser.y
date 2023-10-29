@@ -1,52 +1,66 @@
 %{
 #include <stdio.h>
-
+#define YYSTYPE float
 %}
 
 
 %union {
     int num;
-    char sym;
+    char* sym;
 }
 
-%token CHAR STRING CONST BOOL INT FLOAT
+%token <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
 
 %token IDF
 
-%token PLUS MINUS MULT DIV EG SUP LES LESE SUPE AND OR INCR  DECR ASSIG
+%token <sym>PLUS <sym>MINUS <sym>MULT <sym>DIV <sym>EG <sym>SUP <sym>LES <sym>LESE <sym>SUPE <sym>AND <sym>OR <sym>INCR  <sym>DECR <sym>ASSIG
 
 %token _TRUE _FALSE
 
-%token NOTEG
+%token <sym>NOTEG
 
-%token BEG END RETURN SEMI EOL SEP
+%token <sym>BEG <sym>END <sym>RETURN <sym>SEMI EOL <sym>SEP
 
-%token FOR IF WHILE DO
+%token <sym>FOR <sym>IF <sym>WHILE <sym>DO
 
-%token neg_FLOAT_val FLOAT_val BOOL_val neg_INT_val INT_val STRING_val CHAR_val
+%token <num>neg_FLOAT_val <num>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val
 
 
 %%
 
 input:
-|line EOL input
+|decline EOL input
+|BEG EOL Sinput 
 ;
 
-line:
-|AFFECTATION 
-|type AFFECTATION
-|CONST type AFFECTATION
+Sinput:
+affline EOL Sinput
+|END {printf("\n\n Checker done you can run your program \n\n");}
+;
+
+affline:
+AFFECTATION
+|EOL
+;
+decline:
+type IDFSEP 
+|CONST type AFFECTATION 
 |EOL
 ;
 
-
 AFFECTATION:
-|IDF ASSIG OPERATION SEMI {printf(" c'est une affectation  a = x \n");}
-|IDF ASSIG OPERATION SEP AFFECTATION {printf(" c'est une affectation a = b,a = x \n");}
+IDF ASSIG OPERATION SEMI   
+|IDF ASSIG OPERATION SEP AFFECTATION 
+
+IDFSEP:
+IDF SEMI
+|IDF SEP IDFSEP
+|IDF ASSIG OPERATION SEP IDFSEP
+|AFFECTATION
 
 OPERATION:
 EXPRESSION
-|OPERATION Opp OPERATION
+|OPERATION Opp OPERATION 
 |EXPRESSION Opp EXPRESSION 
 
 EXPRESSION:
@@ -54,7 +68,7 @@ VALUES
 |IDF
 
 Opp:
-|PLUS|MINUS|MULT|DIV|INCR|DECR|EG|SUP|LES|LESE|SUPE|AND|OR
+PLUS|MINUS|MULT|DIV|INCR|DECR|EG|SUP|LES|LESE|SUPE|AND|OR
 
 type:
 FLOAT|INT|BOOL|CHAR|STRING

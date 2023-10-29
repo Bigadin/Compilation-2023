@@ -1,0 +1,13 @@
+int a = 12;
+int c,q_d = 4,game;
+float k,l,o;
+const bool ma = true;
+const float w = 32;
+bool verif = faux;
+BEGIN
+a = 3;
+a = b + 4;
+c = 4 + 5 + 3;
+x = 9 - 5 * 4*a;
+verif = vrai;
+END

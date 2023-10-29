@@ -5,6 +5,8 @@ typedef enum { false, true } bool;
 
 int nline = 1;
 bool error = false;
+
+extern YYSTYPE yylval;
 %}
 
 %option noyywrap
@@ -40,15 +42,15 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "vrai"|"true" {return _TRUE;}
 "faux"|"false" {return _FALSE;} 
 "int" {return INT;}
-{int} {if(yytext[0] == '-'){return neg_INT_val;} return INT_val;}
+{int} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_INT_val;}yylval.num = atoi(yytext); return INT_val;}
 "float" {return FLOAT;}
-{float} {if(yytext[0] == '-'){return neg_FLOAT_val;} return FLOAT_val;}
+{float} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_FLOAT_val;} yylval.num = atoi(yytext); return FLOAT_val;}
 "const" {return CONST;}
 "string" {return STRING;}
-{string} {return STRING_val;}
+{string} { yylval.num = strdup(yytext); return STRING_val;}
 "char" {return CHAR;}
-{char} { return CHAR_val;}
-{idf} {if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}return IDF;}
+{char} { yylval.num = strdup(yytext); return CHAR_val;}
+{idf} {if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
 "=" {return ASSIG;}
 "+" {return PLUS;}  
 "-" {return MINUS;}  

@@ -100,7 +100,7 @@ union YYSTYPE
 #line 7 "parser.y"
 
     int num;
-    char sym;
+    char* sym;
 
 #line 106 "parser.tab.h"
 

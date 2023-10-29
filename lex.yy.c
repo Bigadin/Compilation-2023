@@ -568,8 +568,10 @@ typedef enum { false, true } bool;
 
 int nline = 1;
 bool error = false;
-#line 572 "lex.yy.c"
-#line 573 "lex.yy.c"
+
+extern YYSTYPE yylval;
+#line 574 "lex.yy.c"
+#line 575 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -786,9 +788,9 @@ YY_DECL
 		}
 
 	{
-#line 31 "flexll.l"
+#line 33 "flexll.l"
 
-#line 792 "lex.yy.c"
+#line 794 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -857,213 +859,213 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 32 "flexll.l"
+#line 34 "flexll.l"
 {return BEG;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 33 "flexll.l"
+#line 35 "flexll.l"
 {return END;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 34 "flexll.l"
+#line 36 "flexll.l"
 {return RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 35 "flexll.l"
+#line 37 "flexll.l"
 {return FOR;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 36 "flexll.l"
+#line 38 "flexll.l"
 {return IF;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 37 "flexll.l"
+#line 39 "flexll.l"
 {return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 38 "flexll.l"
+#line 40 "flexll.l"
 {return DO;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 39 "flexll.l"
+#line 41 "flexll.l"
 {return BOOL;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 40 "flexll.l"
+#line 42 "flexll.l"
 {return _TRUE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 41 "flexll.l"
+#line 43 "flexll.l"
 {return _FALSE;} 
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 42 "flexll.l"
+#line 44 "flexll.l"
 {return INT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 43 "flexll.l"
-{if(yytext[0] == '-'){return neg_INT_val;} return INT_val;}
+#line 45 "flexll.l"
+{if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_INT_val;}yylval.num = atoi(yytext); return INT_val;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 44 "flexll.l"
+#line 46 "flexll.l"
 {return FLOAT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 45 "flexll.l"
-{if(yytext[0] == '-'){return neg_FLOAT_val;} return FLOAT_val;}
+#line 47 "flexll.l"
+{if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_FLOAT_val;} yylval.num = atoi(yytext); return FLOAT_val;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 46 "flexll.l"
+#line 48 "flexll.l"
 {return CONST;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 47 "flexll.l"
+#line 49 "flexll.l"
 {return STRING;}
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 48 "flexll.l"
-{return STRING_val;}
+#line 50 "flexll.l"
+{ yylval.num = strdup(yytext); return STRING_val;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 49 "flexll.l"
+#line 51 "flexll.l"
 {return CHAR;}
 	YY_BREAK
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 50 "flexll.l"
-{ return CHAR_val;}
+#line 52 "flexll.l"
+{ yylval.num = strdup(yytext); return CHAR_val;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 51 "flexll.l"
-{if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}return IDF;}
+#line 53 "flexll.l"
+{if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 52 "flexll.l"
+#line 54 "flexll.l"
 {return ASSIG;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 53 "flexll.l"
+#line 55 "flexll.l"
 {return PLUS;}  
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 54 "flexll.l"
+#line 56 "flexll.l"
 {return MINUS;}  
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 55 "flexll.l"
+#line 57 "flexll.l"
 {return MULT;}  
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 56 "flexll.l"
+#line 58 "flexll.l"
 {return DIV;}   
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 57 "flexll.l"
+#line 59 "flexll.l"
 {return EG;}  
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 58 "flexll.l"
+#line 60 "flexll.l"
 {return LES;}  
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 59 "flexll.l"
+#line 61 "flexll.l"
 {return SUP;}  
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 60 "flexll.l"
+#line 62 "flexll.l"
 {return LESE;}  
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 61 "flexll.l"
+#line 63 "flexll.l"
 {return SUPE;}  
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 62 "flexll.l"
+#line 64 "flexll.l"
 {return AND;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 63 "flexll.l"
+#line 65 "flexll.l"
 {return OR;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 64 "flexll.l"
+#line 66 "flexll.l"
 {return NOTEG;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 65 "flexll.l"
+#line 67 "flexll.l"
 {return INCR;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 66 "flexll.l"
+#line 68 "flexll.l"
 {return DECR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 67 "flexll.l"
+#line 69 "flexll.l"
 {return SEMI;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 68 "flexll.l"
+#line 70 "flexll.l"
 {return SEP;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 69 "flexll.l"
+#line 71 "flexll.l"
 {  }
 	YY_BREAK
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 70 "flexll.l"
+#line 72 "flexll.l"
 {printf("%d ",nline); nline++ ; return EOL; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 71 "flexll.l"
+#line 73 "flexll.l"
 { printf("Erreur Lexical :::: %s a la ligne ::: %d\n",yytext,nline); error = true; return yytext[0]; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 73 "flexll.l"
+#line 75 "flexll.l"
 ECHO;
 	YY_BREAK
-#line 1067 "lex.yy.c"
+#line 1069 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2080,7 +2082,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 73 "flexll.l"
+#line 75 "flexll.l"
 
 
 
