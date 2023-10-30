@@ -83,13 +83,18 @@ extern int yydebug;
     IF = 289,
     WHILE = 290,
     DO = 291,
-    neg_FLOAT_val = 292,
-    FLOAT_val = 293,
-    BOOL_val = 294,
-    neg_INT_val = 295,
-    INT_val = 296,
-    STRING_val = 297,
-    CHAR_val = 298
+    OPAR = 292,
+    CPAR = 293,
+    OPEN = 294,
+    CLOSE = 295,
+    ELSE = 296,
+    neg_FLOAT_val = 297,
+    FLOAT_val = 298,
+    BOOL_val = 299,
+    neg_INT_val = 300,
+    INT_val = 301,
+    STRING_val = 302,
+    CHAR_val = 303
   };
 #endif
 
@@ -97,12 +102,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 7 "parser.y"
+#line 11 "parser.y"
 
     int num;
     char* sym;
 
-#line 106 "parser.tab.h"
+#line 111 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -3,14 +3,22 @@
 #include "parser.tab.h"
 typedef enum { false, true } bool;
 
-int nline = 1;
+extern yylineo;
+extern col;
+extern LastLeng;
 bool error = false;
 
 extern YYSTYPE yylval;
+
+void sendInformation(){
+    col = col + yyleng;
+    LastLeng = yyleng;
+}
 %}
 
 %option noyywrap
 %option yylineno
+
 
 Chiffre [0-9]
 Lettre [a-zA-Z]
@@ -31,46 +39,53 @@ idf {Lettre}({Underscore}?({Lettre}|{Chiffre})*)*
 commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 
 %%
-"BEGIN" {return BEG;}
-"END" {return END;}
-"return" {return RETURN;}
-"for" {return FOR;}
-"if" {return IF;}
-"while" {return WHILE;}
-"do" {return DO;}
-"bool" {return BOOL;}
-"vrai"|"true" {return _TRUE;}
-"faux"|"false" {return _FALSE;} 
-"int" {return INT;}
-{int} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_INT_val;}yylval.num = atoi(yytext); return INT_val;}
-"float" {return FLOAT;}
-{float} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_FLOAT_val;} yylval.num = atoi(yytext); return FLOAT_val;}
-"const" {return CONST;}
-"string" {return STRING;}
-{string} { yylval.num = strdup(yytext); return STRING_val;}
-"char" {return CHAR;}
-{char} { yylval.num = strdup(yytext); return CHAR_val;}
-{idf} {if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
-"=" {return ASSIG;}
-"+" {return PLUS;}  
-"-" {return MINUS;}  
-"*" {return MULT;}  
-"/" {return DIV;}   
-"=="|"<>" {return EG;}  
-"<" {return LES;}  
-">" {return SUP;}  
-"<=" {return LESE;}  
-">=" {return SUPE;}  
-"&&" {return AND;}
-"||" {return OR;}
-"!=" {return NOTEG;}
-"++" {return INCR;}
-"--" {return DECR;}
-";" {return SEMI;}
-"," {return SEP;}
-[ \t]  {  }
-[\n] {printf("%d ",nline); nline++ ; return EOL; }
-. { printf("Erreur Lexical :::: %s a la ligne ::: %d\n",yytext,nline); error = true; return yytext[0]; }
+"BEGIN" {sendInformation();
+        return BEG;}
+"END" {sendInformation();
+        return END;}
+"return" {sendInformation();return RETURN;}
+"for" {sendInformation();return FOR;}
+"if" {sendInformation();return IF;}
+"else" {sendInformation();return ELSE;}
+"while" {sendInformation();return WHILE;}
+"do" {sendInformation();return DO;}
+"bool" {sendInformation();return BOOL;}
+"vrai"|"true" {sendInformation();return _TRUE;}
+"faux"|"false" {sendInformation();return _FALSE;} 
+"int" {sendInformation();return INT;}
+{int} {sendInformation();if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_INT_val;}yylval.num = atoi(yytext); return INT_val;}
+"float" {sendInformation();return FLOAT;}
+{float} {sendInformation();if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_FLOAT_val;} yylval.num = atoi(yytext); return FLOAT_val;}
+"const" {sendInformation();return CONST;}
+"string" {sendInformation();return STRING;}
+{string} { sendInformation();yylval.num = strdup(yytext); return STRING_val;}
+"char" {sendInformation();return CHAR;}
+{char} {sendInformation(); yylval.num = strdup(yytext); return CHAR_val;}
+{idf} {sendInformation();if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
+"=" {sendInformation();return ASSIG;}
+"+" {sendInformation();return PLUS;}  
+"-" {sendInformation();return MINUS;}  
+"*" {sendInformation();return MULT;}  
+"/" {sendInformation();return DIV;}   
+"=="|"<>" {sendInformation();return EG;}  
+"<" {sendInformation();return LES;}  
+">" {sendInformation();return SUP;}  
+"<=" {sendInformation();return LESE;}  
+">=" {sendInformation();return SUPE;}  
+"&&" {sendInformation();return AND;}
+"||" {sendInformation();return OR;}
+"!=" {sendInformation();return NOTEG;}
+"++" {sendInformation();return INCR;}
+"--" {sendInformation();return DECR;}
+";" {sendInformation();return SEMI;}
+"," {sendInformation();return SEP;}
+"(" {sendInformation();return OPAR;}
+")" {sendInformation();return CPAR;}
+"{" {sendInformation();return OPEN;}
+"}" {sendInformation();return CLOSE;}
+[ \t]  { sendInformation(); }
+[\n] { yylineo++ ;col = 0; return EOL; }
+. { printf("Erreur Lexical :::: %s a la ligne ::: %d et colonne : %d\n",yytext,yylineo,col); error = true; return yytext[0]; }
 
 %%
 

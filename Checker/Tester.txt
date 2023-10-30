@@ -1,5 +1,6 @@
+float b;
 int a = 12;
-int c,q_d = 4,game;
+int c, q_d = 4,game;
 float k,l,o;
 const bool ma = true;
 const float w = 32;
