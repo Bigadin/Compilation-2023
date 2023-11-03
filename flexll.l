@@ -84,7 +84,7 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "{" {sendInformation();return OPEN;}
 "}" {sendInformation();return CLOSE;}
 [ \t]  { sendInformation(); }
-[\n] { yylineo++ ;col = 0; return EOL; }
+[\n] { yylineo++ ;col = 0;}
 . { printf("Erreur Lexical :::: %s a la ligne ::: %d et colonne : %d\n",yytext,yylineo,col); error = true; return yytext[0]; }
 
 %%

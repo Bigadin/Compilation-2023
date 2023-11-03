@@ -1,3 +1,4 @@
+int a = 89,k = 89; 
 float b;
 
 
@@ -11,6 +12,7 @@ const float w = 32;
 bool verif = faux;
 
 BEGIN
+if(a==43)kj=9000;else           noo=faux ;else if(OPp== 900) make= true;
 if(a == 90) 
     vallsd= faux;
 if(a < 3){

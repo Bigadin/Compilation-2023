@@ -1091,7 +1091,7 @@ case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
 #line 87 "flexll.l"
-{ yylineo++ ;col = 0; return EOL; }
+{ yylineo++ ;col = 0;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP

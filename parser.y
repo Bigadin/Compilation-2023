@@ -24,7 +24,7 @@ char* cal = 0;
 
 %token <sym>NOTEG
 
-%token <sym>BEG <sym>END <sym>RETURN <sym>SEMI EOL <sym>SEP
+%token <sym>BEG <sym>END <sym>RETURN <sym>SEMI  <sym>SEP
 
 %token <sym>FOR <sym>IF <sym>WHILE <sym>DO OPAR CPAR OPEN CLOSE ELSE
 
@@ -39,19 +39,16 @@ char* cal = 0;
 
 // c'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
 input:
-|decline EOL input
-|BEG EOL Sinput 
-|EOL input
+decline  input
+|BEG  Sinput 
 ;
 //ce input c'est celui des affection, apres le begin tout boucle ici
 Sinput:
-affline EOL Sinput
-|EOL Sinput
-|END outbox {printf("\n\n Checker done you can run your program \n\n"); break;}
+affline  Sinput
+|END {printf("\n\n Checker done you can run your program \n\n"); break;}
 ;
 // ça c'est jsute pour ne pas avoir d'erreur si on ecris apres le END
-outbox:
-|EOL outbox
+
 
 // ça c'est decline c'est les lignes de declaration
 decline:
@@ -80,11 +77,10 @@ IDF ASSIG OPERATION SEMI  // une seul affectation
 //If condition
 IFCOND:
 IF OPAR comparaison CPAR OPEN inside_if CLOSE   //condition avec les accolade
-IF OPAR comparaison CPAR EOL OPEN inside_if CLOSE  //condition avec les accolade
-|IF OPAR comparaison CPAR AFFECTATION   //condition direct
-|IF OPAR comparaison CPAR EOL AFFECTATION   //condition direct
+|IF OPAR comparaison CPAR  AFFECTATION   //condition direct
 |IFCOND ELSE IFCOND  // ELSE IF
 |IFCOND ELSE OPEN inside_if CLOSE   // ELSE
+|IFCOND ELSE  inside_if    // ELSE direct
 
 //comparaison
 comparaison:
@@ -95,7 +91,6 @@ comparaison:
 inside_if:
      inside_if AFFECTATION // une affectation
     | inside_if IFCOND // une autre condition
-    | inside_if EOL // une ligne vide
     |   // vide 
     ;
 

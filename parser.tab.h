@@ -77,24 +77,23 @@ extern int yydebug;
     END = 283,
     RETURN = 284,
     SEMI = 285,
-    EOL = 286,
-    SEP = 287,
-    FOR = 288,
-    IF = 289,
-    WHILE = 290,
-    DO = 291,
-    OPAR = 292,
-    CPAR = 293,
-    OPEN = 294,
-    CLOSE = 295,
-    ELSE = 296,
-    neg_FLOAT_val = 297,
-    FLOAT_val = 298,
-    BOOL_val = 299,
-    neg_INT_val = 300,
-    INT_val = 301,
-    STRING_val = 302,
-    CHAR_val = 303
+    SEP = 286,
+    FOR = 287,
+    IF = 288,
+    WHILE = 289,
+    DO = 290,
+    OPAR = 291,
+    CPAR = 292,
+    OPEN = 293,
+    CLOSE = 294,
+    ELSE = 295,
+    neg_FLOAT_val = 296,
+    FLOAT_val = 297,
+    BOOL_val = 298,
+    neg_INT_val = 299,
+    INT_val = 300,
+    STRING_val = 301,
+    CHAR_val = 302
   };
 #endif
 
@@ -107,7 +106,7 @@ union YYSTYPE
     int num;
     char* sym;
 
-#line 111 "parser.tab.h"
+#line 110 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
