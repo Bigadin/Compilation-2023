@@ -11,7 +11,8 @@ const float w = 32;
 bool verif = faux;
 
 BEGIN
-
+if(a == 90) 
+    vallsd= faux;
 if(a < 3){
 
 a = 3;
@@ -21,10 +22,18 @@ if(a == 45){
     c = vrai;
     if(a >= b){ 
         a = op_sd - 34;
+    }else if(c < 34){
+        k = 0;
+        boolean = vrai;
     }
+    else{
+        bolean = faux;
+    }
+}else{
+    poo = wola + 43;
 }
 c = 4 + 5 + 3;
-x = 9 - 5 * 4*a;
+x = 9 - 5 * 4*a,k = 90;
 
 verif = vrai;
 }
