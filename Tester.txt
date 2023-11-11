@@ -1,47 +1,47 @@
-int a = 12;
-int c,Q_d = 4,game;
-int choice = 2;
-float k,l,o;
-const bool ma = true;
-const float w = 32;
-bool verif = faux;
+int A = 12;
+int cC,Q_d = 4,game;
+int Choice = 2;
+float K,L,O;
+const bool Ma = true;
+const float W = 32;
+bool Verif = faux;
 BEGIN
-a = 3;
-a = b + 4;
-c = 4 + 5 + 3;
-x = 9 - 5 * 4*a;
-verif = vrai;
-for (int i = 5-5; i < 5; i++) {
-    game += i;
-    return game;
+A = 3;
+A = B + 4;
+C = 4 + 5 + 3;
+X = 9 - 5 * 4*A;
+Verif = vrai;
+for (int I = 5-5; i < 5; i++) {
+    Game += I;
+    return Game;
 }
 
 do {
-    a--;
-} while (a > 0);
+    A--;
+} while (A > 0);
 
-while (c < 100) {
-    c *= 2 ;
-    a += 10;
-    b /= 1;
+while (C < 100) {
+    C *= 2 ;
+    C += 10;
+    B /= 1;
 }
 
-if(a <> c)
+if(A <> C)
 {
-    return a+c ;
+    return A+C ;
 }
 
-if (b < w )
+if (B < W )
 {
-    return !verif;
-}else if (b == w)
+    return !Verif;
+}else if (B == W)
 {
-    return b;
+    return B;
 }else{
-    return verif;
+    return Verif;
 }
 
-switch (choice) {
+switch (Choice) {
     case 1:
         printf("You chose option 1\n");
         break;
