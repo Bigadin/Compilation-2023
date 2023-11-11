@@ -69,14 +69,22 @@
 #line 1 "parser.y"
 
 #include <stdio.h>
+#include "Sem.h"
 #define YYSTYPE float
 
 int yylineo = 1; // les lignes
 int col = 1; // les colonnes
 int LastLeng =0; // le leng du dernier token trouvé
 char* cal = 0;
+int int_value = 0;
+float float_value = 0;
+union yylval;
 
-#line 80 "parser.tab.c"
+//
+extern int operationIndex;
+
+
+#line 88 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -176,12 +184,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "parser.y"
+#line 20 "parser.y"
 
-    int num;
-    char* sym;
+int num;
+char* sym;
 
-#line 185 "parser.tab.c"
+#line 193 "parser.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -561,12 +569,12 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    42,    42,    43,    47,    48,    55,    56,    61,    62,
-      63,    64,    68,    69,    74,    75,    79,    80,    81,    82,
-      83,    87,    92,    93,    94,   100,   101,   102,   106,   107,
-     111,   111,   111,   111,   111,   111,   115,   115,   115,   115,
-     115,   119,   120,   121,   122,   123,   124,   125,   126,   130,
-     130,   130,   130,   130,   130
+       0,    50,    50,    51,    55,    56,    63,    64,    69,    70,
+      71,    72,    76,    77,    82,    83,    87,    88,    89,    90,
+      91,    95,   100,   101,   102,   108,   109,   110,   114,   115,
+     119,   119,   119,   119,   119,   119,   123,   123,   123,   123,
+     123,   127,   128,   129,   130,   131,   132,   133,   134,   138,
+     138,   138,   138,   138,   138
 };
 #endif
 
@@ -1420,13 +1428,67 @@ yyreduce:
   switch (yyn)
     {
   case 5:
-#line 48 "parser.y"
+#line 56 "parser.y"
      {printf("\n\n Checker done you can run your program \n\n"); break;}
-#line 1426 "parser.tab.c"
+#line 1434 "parser.tab.c"
+    break;
+
+  case 27:
+#line 110 "parser.y"
+                           {}
+#line 1440 "parser.tab.c"
+    break;
+
+  case 30:
+#line 119 "parser.y"
+     {operationIndex = 0;}
+#line 1446 "parser.tab.c"
+    break;
+
+  case 31:
+#line 119 "parser.y"
+                                {operationIndex = 1;}
+#line 1452 "parser.tab.c"
+    break;
+
+  case 32:
+#line 119 "parser.y"
+                                                           {operationIndex = 2;}
+#line 1458 "parser.tab.c"
+    break;
+
+  case 33:
+#line 119 "parser.y"
+                                                                                    {operationIndex = 3;}
+#line 1464 "parser.tab.c"
+    break;
+
+  case 41:
+#line 127 "parser.y"
+              {OperationCalcule(float_value,operationIndex);}
+#line 1470 "parser.tab.c"
+    break;
+
+  case 42:
+#line 128 "parser.y"
+           {OperationCalcule(float_value,operationIndex); }
+#line 1476 "parser.tab.c"
+    break;
+
+  case 45:
+#line 131 "parser.y"
+             {OperationCalcule(float_value,operationIndex);}
+#line 1482 "parser.tab.c"
+    break;
+
+  case 46:
+#line 132 "parser.y"
+         {OperationCalcule(float_value,operationIndex);}
+#line 1488 "parser.tab.c"
     break;
 
 
-#line 1430 "parser.tab.c"
+#line 1492 "parser.tab.c"
 
       default: break;
     }
@@ -1658,7 +1720,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 132 "parser.y"
+#line 140 "parser.y"
 
 
 // main pour pouvoir tester directement un fichier si il est valide ou pas

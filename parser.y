@@ -1,17 +1,31 @@
 %{
 #include <stdio.h>
+#include "Sem.h"
 #define YYSTYPE float
 
 int yylineo = 1; // les lignes
 int col = 1; // les colonnes
 int LastLeng =0; // le leng du dernier token trouvé
 char* cal = 0;
+int int_value = 0;
+float float_value = 0;
+union yylval;
+
+//
+extern int operationIndex;
+
+struct op{
+    float a;
+    float b;
+}
+op ActualOpe;
+
 %}
 
 
 %union {
-    int num;
-    char* sym;
+int num;
+char* sym;
 }
 
 %token <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
@@ -98,8 +112,8 @@ inside_if:
 // opperation 
 OPERATION:
 EXPRESSION // ça c'est pour evité des erreurs avec les affectations
-|OPERATION Opp OPERATION 
-|EXPRESSION Opp EXPRESSION
+|OPERATION Opp OPERATION  
+|EXPRESSION Opp EXPRESSION 
 
 //Expression pour dire value ou idf
 EXPRESSION:
@@ -108,7 +122,7 @@ VALUES
 
 // toute les op possibles
 Opp:
-PLUS|MINUS|MULT|DIV|INCR|DECR
+PLUS {operationIndex = 0;}|MINUS{operationIndex = 1;}|MULT {operationIndex = 2;}|DIV{operationIndex = 3;}|INCR|DECR
 
 //tous les type possibles
 type:
@@ -116,12 +130,12 @@ FLOAT|INT|BOOL|CHAR|STRING
 
 //toute les valeurs possibles
 VALUES:
-neg_FLOAT_val 
-|FLOAT_val 
+neg_FLOAT_val {OperationCalcule(float_value,operationIndex);}
+|FLOAT_val {OperationCalcule(float_value,operationIndex); }
 |_TRUE 
-|_FALSE 
-|neg_INT_val 
-|INT_val 
+|_FALSE
+|neg_INT_val {OperationCalcule(float_value,operationIndex);}
+|INT_val {OperationCalcule(float_value,operationIndex);}
 |STRING_val 
 |CHAR_val
 

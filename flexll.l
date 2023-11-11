@@ -4,11 +4,13 @@
 typedef enum { false, true } bool;
 
 extern yylineo;
-extern col;
+extern int col;
 extern LastLeng;
+extern float calcule;
 bool error = false;
 
 extern YYSTYPE yylval;
+extern int int_value;
 
 void sendInformation(){
     col = col + yyleng;
@@ -53,9 +55,9 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "vrai"|"true" {sendInformation();return _TRUE;}
 "faux"|"false" {sendInformation();return _FALSE;} 
 "int" {sendInformation();return INT;}
-{int} {sendInformation();if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_INT_val;}yylval.num = atoi(yytext); return INT_val;}
+{int} {yylval.num = atoi(yytext); int_value = yylval.num;sendInformation();if(yytext[0] == '-'){  return neg_INT_val;}return INT_val;}
 "float" {sendInformation();return FLOAT;}
-{float} {sendInformation();if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_FLOAT_val;} yylval.num = atoi(yytext); return FLOAT_val;}
+{float} {yylval.num = atof(yytext);sendInformation();if(yytext[0] == '-'){ return neg_FLOAT_val;}  return FLOAT_val;}
 "const" {sendInformation();return CONST;}
 "string" {sendInformation();return STRING;}
 {string} { sendInformation();yylval.num = strdup(yytext); return STRING_val;}
@@ -77,7 +79,13 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "!=" {sendInformation();return NOTEG;}
 "++" {sendInformation();return INCR;}
 "--" {sendInformation();return DECR;}
-";" {sendInformation();return SEMI;}
+";" {
+    sendInformation();
+    if(calcule > 0)
+        printf(" \n le calcules est de ::: %f ,, %d \n",calcule,yylineo);
+    calcule = 0;
+    return SEMI;
+    }
 "," {sendInformation();return SEP;}
 "(" {sendInformation();return OPAR;}
 ")" {sendInformation();return CPAR;}

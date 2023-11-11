@@ -1,4 +1,4 @@
-int a = 89,k = 89; 
+int a = 89,k = 8; 
 float b;
 
 
@@ -48,5 +48,5 @@ x = 9 - 5 * 4*a;
 
 
 verif = vrai;
-
+x = 1 + 2+ 3 + 3 - 32+ 4;
 END
