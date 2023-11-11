@@ -1,63 +1,139 @@
 %{
 #include <stdio.h>
-
+#define YYSTYPE float /* should be int or union */
 %}
 
 
 %union {
     int num;
-    char sym;
+    char* sym;
 }
 
-%token CHAR STRING CONST BOOL INT FLOAT
+%token <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
 
 %token IDF
 
-%token PLUS MINUS MULT DIV EG SUP LES LESE SUPE AND OR INCR  DECR ASSIG
+%token <sym>PLUS <sym>MINUS <sym>MULT <sym>DIV <sym>EG <sym>SUP <sym>LES <sym>LESE <sym>SUPE <sym>AND <sym>OR <sym>INCR  <sym>DECR <sym>ASSIG <sym>AddAff <sym>MulAff <sym>MinAff <sym>DivAff <sym>NOT
 
 %token _TRUE _FALSE
 
-%token NOTEG
+%token <sym>NOTEG
 
-%token BEG END RETURN SEMI EOL SEP
+%token <sym>BEG <sym>END <sym>RETURN <sym>SEMI EOL <sym>SEP <sym>OPEP <sym>CLOP <sym>DeuxPoints <sym>OPECurlBrak <sym>CLOCurlBrak
 
-%token FOR IF WHILE DO
+%token <sym>FOR <sym>IF <sym>WHILE <sym>DO <sym>ELSE <sym>BREAK <sym>CONTINUE <sym>SWITCH <sym>CASE <sym> DEFAULT <sym>PRINTF
 
-%token neg_FLOAT_val FLOAT_val BOOL_val neg_INT_val INT_val STRING_val CHAR_val
+%token <num>neg_FLOAT_val <num>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val <sym>FORMAT_STRING
 
 
 %%
 
 input:
-|line EOL input
+|decline EOL input
+|BEG EOL Sinput 
 ;
 
-line:
-|AFFECTATION 
-|type AFFECTATION
-|CONST type AFFECTATION
+Sinput:
+affline EOL Sinput
+|END {printf("\n\n Checker done you can run your program \n\n");}
+;
+
+affline:
+AFFECTATION
+|BOUCLE
+|STMT
+|RETURN OPERATION SEMI
+|RETURN EXPRESSION SEMI
+|BREAK SEMI
+|CONTINUE SEMI
+|EOL
+;
+decline:
+type IDFSEP 
+|CONST type AFFECTATION 
 |EOL
 ;
 
-
 AFFECTATION:
-|IDF ASSIG OPERATION SEMI {printf(" c'est une affectation  a = x \n");}
-|IDF ASSIG OPERATION SEP AFFECTATION {printf(" c'est une affectation a = b,a = x \n");}
+IDF ASSIG OPERATION SEMI   
+|IDF ASSIG OPERATION SEP AFFECTATION
+|IDF ASSIG EXPRESSION SEMI   
+|IDF ASSIG EXPRESSION SEP AFFECTATION
+
+
+IDFSEP:
+IDF SEMI
+|IDF SEP IDFSEP
+|IDF ASSIG OPERATION SEP IDFSEP
+|AFFECTATION
+
+
+BOUCLE:
+FOR OPEP INIT SEP CONDITION SEP OPERATION CLOP 
+    OPECurlBrak affline CLOCurlBrak
+|IF OPEP CONDITION CLOP 
+    OPECurlBrak affline CLOCurlBrak
+|IF OPEP CONDITION CLOP 
+    OPECurlBrak affline CLOCurlBrak 
+    IFELSE 
+|WHILE OPEP CONDITION CLOP 
+    OPECurlBrak affline CLOCurlBrak
+|DO OPECurlBrak affline CLOCurlBrak 
+    WHILE OPEP CONDITION CLOP SEMI
+|SWITCH OPEP EXPRESSION CLOP 
+    OPECurlBrak CASES CLOCurlBrak
+
+
+IFELSE:
+ELSE IF OPEP CONDITION CLOP 
+    OPECurlBrak affline CLOCurlBrak 
+    IFELSE
+|ELSE OPECurlBrak affline CLOCurlBrak
+
+INIT:
+type IDF ASSIG EXPRESSION
+|IDF ASSIG EXPRESSION
+
+CASES:
+CASE VALUES DeuxPoints 
+    OPECurlBrak affline CLOCurlBrak 
+    CASES 
+|DEFAULT DeuxPoints 
+    OPECurlBrak affline CLOCurlBrak
+
+
+CONDITION:
+OPERATION Opp OPERATION 
+|EXPRESSION Opp EXPRESSION 
+|NOT EXPRESSION
+
 
 OPERATION:
-EXPRESSION
-|OPERATION Opp OPERATION
+OPERATION Opp OPERATION 
 |EXPRESSION Opp EXPRESSION 
+|EXPRESSION DecInc
+
+
+STMT:
+PRINTF OPEP FORMAT_STRING SEP IDF CLOP SEMI
+|PRINTF OPEP FORMAT_STRING CLOP SEMI
 
 EXPRESSION:
 VALUES
 |IDF
 
+
 Opp:
-|PLUS|MINUS|MULT|DIV|INCR|DECR|EG|SUP|LES|LESE|SUPE|AND|OR
+PLUS|MINUS|MULT|DIV|EG|SUP|LES|LESE|SUPE|AND|OR|AddAff|MulAff|MinAff|DivAff
+
+
+DecInc:
+INCR|DECR
+
 
 type:
 FLOAT|INT|BOOL|CHAR|STRING
+
 
 VALUES:
 neg_FLOAT_val 
@@ -68,6 +144,7 @@ neg_FLOAT_val
 |INT_val 
 |STRING_val 
 |CHAR_val
+
 
 %%
 

@@ -1,0 +1,57 @@
+int a = 12;
+int c,Q_d = 4,game;
+int choice = 2;
+float k,l,o;
+const bool ma = true;
+const float w = 32;
+bool verif = faux;
+BEGIN
+a = 3;
+a = b + 4;
+c = 4 + 5 + 3;
+x = 9 - 5 * 4*a;
+verif = vrai;
+for (int i = 5-5; i < 5; i++) {
+    game += i;
+    return game;
+}
+
+do {
+    a--;
+} while (a > 0);
+
+while (c < 100) {
+    c *= 2 ;
+    a += 10;
+    b /= 1;
+}
+
+if(a <> c)
+{
+    return a+c ;
+}
+
+if (b < w )
+{
+    return !verif;
+}else if (b == w)
+{
+    return b;
+}else{
+    return verif;
+}
+
+switch (choice) {
+    case 1:
+        printf("You chose option 1\n");
+        break;
+    case 2:
+        printf("You chose option 2\n");
+        break;
+    case 3:
+        printf("You chose option 3\n");
+        break;
+    default:
+        printf("Invalid choice\n");
+}
+END

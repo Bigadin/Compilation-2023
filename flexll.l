@@ -1,10 +1,14 @@
 %{
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 #include "parser.tab.h"
-typedef enum { false, true } bool;
+
 
 int nline = 1;
 bool error = false;
+
+extern YYSTYPE yylval;
 %}
 
 %option noyywrap
@@ -17,41 +21,56 @@ Nombre [1-9][0-9]*|0
 Underscore "_"
 Neg "-"
 Space " "
+deb {"/*" | "{"}
+ffin {"*/" | "}"}
 
 int {Neg}?{Nombre}+
 float {Neg}?({Nombre}+|{Nombre}+"."{Nombre}+)
 char ['][^'][']
-string ["][^"]["]  
+string ["][^"]*["]  
 
-idf {Lettre}({Underscore}?({Lettre}|{Chiffre})*)*
+idf {LettreM}({Underscore}?({Lettre}|{Chiffre})*)*
 commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
+prints \"[^"]*\" 
 
 %%
 "BEGIN" {return BEG;}
 "END" {return END;}
+"printf" {return PRINTF;}
 "return" {return RETURN;}
 "for" {return FOR;}
 "if" {return IF;}
+"else" {return ELSE;}
 "while" {return WHILE;}
 "do" {return DO;}
+"break" {return BREAK;}
+"continue" {return CONTINUE;}
+"switch" {return SWITCH;}
+"case" {return CASE;}
+"default" {return DEFAULT;}
 "bool" {return BOOL;}
 "vrai"|"true" {return _TRUE;}
 "faux"|"false" {return _FALSE;} 
 "int" {return INT;}
-{int} {if(yytext[0] == '-'){return neg_INT_val;} return INT_val;}
+{int} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_INT_val;}yylval.num = atoi(yytext); return INT_val;}
 "float" {return FLOAT;}
-{float} {if(yytext[0] == '-'){return neg_FLOAT_val;} return FLOAT_val;}
+{float} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_FLOAT_val;} yylval.num = atoi(yytext); return FLOAT_val;}
 "const" {return CONST;}
 "string" {return STRING;}
-{string} {return STRING_val;}
+{string} { yylval.num = strdup(yytext); return STRING_val;}
 "char" {return CHAR;}
-{char} { return CHAR_val;}
-{idf} {if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}return IDF;}
+{char} { yylval.num = strdup(yytext); return CHAR_val;}
+{idf} {if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
+{prints} { yylval.num = strdup(yytext); return FORMAT_STRING;}
 "=" {return ASSIG;}
-"+" {return PLUS;}  
-"-" {return MINUS;}  
+"+" {return PLUS;}
+"+=" {return AddAff;}  
+"-" {return MINUS;} 
+"-=" {return MinAff;} 
 "*" {return MULT;}  
+"*=" {return MulAff;}
 "/" {return DIV;}   
+"/=" {return DivAff;}
 "=="|"<>" {return EG;}  
 "<" {return LES;}  
 ">" {return SUP;}  
@@ -60,10 +79,16 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "&&" {return AND;}
 "||" {return OR;}
 "!=" {return NOTEG;}
+"!" {return NOT;}
 "++" {return INCR;}
 "--" {return DECR;}
 ";" {return SEMI;}
 "," {return SEP;}
+"(" {return OPEP;}
+")" {return CLOP;}
+":" {return DeuxPoints;}
+"{" {return OPECurlBrak;}
+"}" {return CLOCurlBrak;}
 [ \t]  {  }
 [\n] {printf("%d ",nline); nline++ ; return EOL; }
 . { printf("Erreur Lexical :::: %s a la ligne ::: %d\n",yytext,nline); error = true; return yytext[0]; }
