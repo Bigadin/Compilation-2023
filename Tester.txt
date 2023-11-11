@@ -1,5 +1,5 @@
 int A = 12;
-int C,Q_d = 4,game;
+int C,Q_d = 4,Game;
 int Choice = 2;
 float K,L,O;
 const bool Ma = true;
