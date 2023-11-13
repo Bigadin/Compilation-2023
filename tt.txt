@@ -1,1 +1,0 @@
-int a = 89,k = 89;BEGIN if(a==43)kj=9000;else           noo=faux;END

@@ -11,8 +11,8 @@ all: $(Binary)
 $(Binary): $(FlexFile) $(BisonFile) 
 	$(BB) -d -t $(BisonFile)
 	$(FF) $(FlexFile)
-	$(CC) -o $@ $(CFile)
-	./program Checker/Tester.txt
+	$(CC) -std=gnu99 -Wall -o  $@ $(CFile)
+	./program exemple.txt
 
 clean:
 	rm -rf $(Binary) $(CFile)

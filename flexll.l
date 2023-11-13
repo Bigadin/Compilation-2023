@@ -1,16 +1,20 @@
 %{
+#include <stdlib.h>
 #include <stdio.h>
-#include "parser.tab.h"
-typedef enum { false, true } bool;
 
+#include "parser.tab.h"
 extern yylineo;
 extern int col;
 extern LastLeng;
 extern float calcule;
-bool error = false;
 
 extern YYSTYPE yylval;
+
+//sending data
+
 extern int int_value;
+extern float float_value;
+extern float string_value;
 
 void sendInformation(){
     col = col + yyleng;
@@ -28,14 +32,12 @@ LettreM [A-Z]
 Nombre [1-9][0-9]*|0
 Underscore "_"
 Neg "-"
-Space " "
 deb {"/*" | "{"}
 ffin {"*/" | "}"}
-
+float {Neg}?{Nombre}+"."{Nombre}+
 int {Neg}?{Nombre}+
-float {Neg}?({Nombre}+|{Nombre}+"."{Nombre}+)
 char ['][^'][']
-string ["][^"]["]  
+string ["][^"]+["]  
 
 idf {Lettre}({Underscore}?({Lettre}|{Chiffre})*)*
 commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
@@ -54,16 +56,53 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "bool" {sendInformation();return BOOL;}
 "vrai"|"true" {sendInformation();return _TRUE;}
 "faux"|"false" {sendInformation();return _FALSE;} 
-"int" {sendInformation();return INT;}
-{int} {yylval.num = atoi(yytext); int_value = yylval.num;sendInformation();if(yytext[0] == '-'){  return neg_INT_val;}return INT_val;}
 "float" {sendInformation();return FLOAT;}
-{float} {yylval.num = atof(yytext);sendInformation();if(yytext[0] == '-'){ return neg_FLOAT_val;}  return FLOAT_val;}
+{float} {
+    yylval.real = atof(yytext);
+    sendInformation();
+    float_value = yylval.real;
+     printf("\n FLOAT :=: %f",float_value);
+    if(yytext[0] == '-'){
+         return neg_FLOAT_val;
+    }
+      return FLOAT_val;
+    }
+"int" {sendInformation();return INT;}
+{int} {
+     yylval.num = atoi(yytext);
+     int_value = yylval.num;
+     sendInformation();
+     printf("\n INT :=: %d",yylval);
+     if(yytext[0] == '-'){
+          return neg_INT_val;
+        }
+    return INT_val;
+    }
+
 "const" {sendInformation();return CONST;}
 "string" {sendInformation();return STRING;}
-{string} { sendInformation();yylval.num = strdup(yytext); return STRING_val;}
+{string} { 
+    sendInformation();
+    yylval.sym = strdup(yytext);
+    printf("\n STRING :=: %s",yylval);
+    return STRING_val;
+    }
 "char" {sendInformation();return CHAR;}
-{char} {sendInformation(); yylval.num = strdup(yytext); return CHAR_val;}
-{idf} {sendInformation();if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
+{char} {
+    sendInformation();
+    yylval.sym = strdup(yytext);
+    printf("\n CHAR :=: %s",yylval);
+    return CHAR_val;
+    }
+{idf} {
+    sendInformation();
+    if(yyleng>10){
+    printf("(%s) : Identificateur trop long", yytext);
+    }
+    yylval.sym = strdup(yytext);
+    printf("\n IDF :=: %s",yylval);
+    return IDF;
+    }
 "=" {sendInformation();return ASSIG;}
 "+" {sendInformation();return PLUS;}  
 "-" {sendInformation();return MINUS;}  
@@ -81,9 +120,6 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "--" {sendInformation();return DECR;}
 ";" {
     sendInformation();
-    if(calcule > 0)
-        printf(" \n le calcules est de ::: %f ,, %d \n",calcule,yylineo);
-    calcule = 0;
     return SEMI;
     }
 "," {sendInformation();return SEP;}
@@ -93,7 +129,7 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "}" {sendInformation();return CLOSE;}
 [ \t]  { sendInformation(); }
 [\n] { yylineo++ ;col = 0;}
-. { printf("Erreur Lexical :::: %s a la ligne ::: %d et colonne : %d\n",yytext,yylineo,col); error = true; return yytext[0]; }
+. { printf("\nErreur Lexical : %s a la ligne : %d et colonne : %d\n",yytext,yylineo,col); return yytext[0]; }
 
 %%
 

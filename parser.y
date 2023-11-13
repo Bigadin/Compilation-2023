@@ -8,23 +8,20 @@ int col = 1; // les colonnes
 int LastLeng =0; // le leng du dernier token trouvé
 char* cal = 0;
 int int_value = 0;
-float float_value = 0;
+float float_value = 1;
+char* string_value ;
 union yylval;
 
 //
 extern int operationIndex;
 
-struct op{
-    float a;
-    float b;
-}
-op ActualOpe;
 
 %}
 
 
 %union {
 int num;
+float real;
 char* sym;
 }
 
@@ -50,7 +47,7 @@ char* sym;
 %start input
 
 %%
-
+//
 // c'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
 input:
 decline  input
@@ -72,7 +69,7 @@ type IDFSEP // declaration normal
 
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI // int a;
+IDF SEMI  // int a;
 |IDF SEP IDFSEP // int a,IDFSEP
 |IDF ASSIG OPERATION SEP IDFSEP // int a = 4,IDFSEP
 |AFFECTATION // int a = 4;
@@ -81,6 +78,7 @@ IDF SEMI // int a;
 affline:
 AFFECTATION
 |IFCOND
+|loop
 ;
 
 //affectaion 
@@ -90,21 +88,29 @@ IDF ASSIG OPERATION SEMI  // une seul affectation
 
 //If condition
 IFCOND:
-IF OPAR comparaison CPAR OPEN inside_if CLOSE   //condition avec les accolade
+IF OPAR comparaison CPAR OPEN inside_brack CLOSE   //condition avec les accolade
 |IF OPAR comparaison CPAR  AFFECTATION   //condition direct
 |IFCOND ELSE IFCOND  // ELSE IF
-|IFCOND ELSE OPEN inside_if CLOSE   // ELSE
-|IFCOND ELSE  inside_if    // ELSE direct
+|IFCOND ELSE OPEN inside_brack CLOSE   // ELSE
+|IFCOND ELSE  inside_brack    // ELSE direct
+
+loop:
+WHILE OPAR comparaison CPAR OPEN inside_brack CLOSE
+|WHILE OPAR comparaison CPAR  inside_brack 
+
+ 
 
 //comparaison
 comparaison:
-    OPERATION cmp OPERATION // c'est opperation comparée a operation pour les if
+    OPERATION cmp OPERATION
+    |comparaison AND OPERATION cmp OPERATION 
+    |comparaison OR OPERATION cmp OPERATION 
+
     ; 
 
-// inside if, pour tout ce qui est possible dans un if
-inside_if:
-     inside_if AFFECTATION // une affectation
-    | inside_if IFCOND // une autre condition
+// inside brack, pour tout ce qui est possible dans { }
+inside_brack:
+     inside_brack affline //ici c'est tout ce que affline offre
     |   // vide 
     ;
 
@@ -122,7 +128,7 @@ VALUES
 
 // toute les op possibles
 Opp:
-PLUS {operationIndex = 0;}|MINUS{operationIndex = 1;}|MULT {operationIndex = 2;}|DIV{operationIndex = 3;}|INCR|DECR
+PLUS|MINUS|MULT|DIV|INCR|DECR
 
 //tous les type possibles
 type:
@@ -130,12 +136,12 @@ FLOAT|INT|BOOL|CHAR|STRING
 
 //toute les valeurs possibles
 VALUES:
-neg_FLOAT_val {OperationCalcule(float_value,operationIndex);}
-|FLOAT_val {OperationCalcule(float_value,operationIndex); }
+neg_FLOAT_val 
+|FLOAT_val 
 |_TRUE 
 |_FALSE
-|neg_INT_val {OperationCalcule(float_value,operationIndex);}
-|INT_val {OperationCalcule(float_value,operationIndex);}
+|neg_INT_val 
+|INT_val 
 |STRING_val 
 |CHAR_val
 
