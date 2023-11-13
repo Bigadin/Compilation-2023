@@ -1,18 +1,26 @@
 %{
 #include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
 #include "parser.tab.h"
+typedef enum { false, true } bool;
 
-
-int nline = 1;
+extern yylineo;
+extern int col;
+extern LastLeng;
+extern float calcule;
 bool error = false;
 
 extern YYSTYPE yylval;
+extern int int_value;
+
+void sendInformation(){
+    col = col + yyleng;
+    LastLeng = yyleng;
+}
 %}
 
 %option noyywrap
 %option yylineno
+
 
 Chiffre [0-9]
 Lettre [a-zA-Z]
@@ -27,71 +35,82 @@ ffin {"*/" | "}"}
 int {Neg}?{Nombre}+
 float {Neg}?({Nombre}+|{Nombre}+"."{Nombre}+)
 char ['][^'][']
-string ["][^"]*["]  
+string ["][^"]["]  
 
 idf {LettreM}({Underscore}?({Lettre}|{Chiffre})*)*
-commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
-prints \"[^"]*\" 
+commentaire "/*"[^/*]*"*/"  
+printf \"[^"]*\" 
 
 %%
-"BEGIN" {return BEG;}
-"END" {return END;}
-"printf" {return PRINTF;}
-"return" {return RETURN;}
-"for" {return FOR;}
-"if" {return IF;}
-"else" {return ELSE;}
-"while" {return WHILE;}
-"do" {return DO;}
-"break" {return BREAK;}
-"continue" {return CONTINUE;}
-"switch" {return SWITCH;}
-"case" {return CASE;}
-"default" {return DEFAULT;}
-"bool" {return BOOL;}
-"vrai"|"true" {return _TRUE;}
-"faux"|"false" {return _FALSE;} 
-"int" {return INT;}
-{int} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_INT_val;}yylval.num = atoi(yytext); return INT_val;}
-"float" {return FLOAT;}
-{float} {if(yytext[0] == '-'){yylval.num = atoi(yytext); return neg_FLOAT_val;} yylval.num = atoi(yytext); return FLOAT_val;}
-"const" {return CONST;}
-"string" {return STRING;}
-{string} { yylval.num = strdup(yytext); return STRING_val;}
-"char" {return CHAR;}
-{char} { yylval.num = strdup(yytext); return CHAR_val;}
-{idf} {if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
-{prints} { yylval.num = strdup(yytext); return FORMAT_STRING;}
-"=" {return ASSIG;}
-"+" {return PLUS;}
-"+=" {return AddAff;}  
-"-" {return MINUS;} 
-"-=" {return MinAff;} 
-"*" {return MULT;}  
-"*=" {return MulAff;}
-"/" {return DIV;}   
-"/=" {return DivAff;}
-"=="|"<>" {return EG;}  
-"<" {return LES;}  
-">" {return SUP;}  
-"<=" {return LESE;}  
-">=" {return SUPE;}  
-"&&" {return AND;}
-"||" {return OR;}
-"!=" {return NOTEG;}
-"!" {return NOT;}
-"++" {return INCR;}
-"--" {return DECR;}
-";" {return SEMI;}
-"," {return SEP;}
-"(" {return OPEP;}
-")" {return CLOP;}
-":" {return DeuxPoints;}
-"{" {return OPECurlBrak;}
-"}" {return CLOCurlBrak;}
-[ \t]  {  }
-[\n] {printf("%d ",nline); nline++ ; return EOL; }
-. { printf("Erreur Lexical :::: %s a la ligne ::: %d\n",yytext,nline); error = true; return yytext[0]; }
+"BEGIN" {sendInformation();
+        return BEG;}
+"END" {sendInformation();
+        return END;}
+"return" {sendInformation();return RETURN;}
+"for" {sendInformation();return FOR;}
+"if" {sendInformation();return IF;}
+"else" {sendInformation();return ELSE;}
+"while" {sendInformation();return WHILE;}
+"do" {sendInformation();return DO;}
+"break" {sendInformation();return BREAK;}
+"continue" {sendInformation();return CONTINUE;}
+"switch" {sendInformation();return SWITCH;}
+"case" {sendInformation();return CASE;}
+"default" {sendInformation();return DEFAULT;}
+"bool" {sendInformation();return BOOL;}
+"vrai"|"true" {sendInformation();return _TRUE;}
+"faux"|"false" {sendInformation();return _FALSE;} 
+"int" {sendInformation();return INT;}
+{int} {yylval.num = atoi(yytext); int_value = yylval.num;sendInformation();if(yytext[0] == '-'){  return neg_INT_val;}return INT_val;}
+"float" {sendInformation();return FLOAT;}
+{float} {yylval.num = atof(yytext);sendInformation();if(yytext[0] == '-'){ return neg_FLOAT_val;}  return FLOAT_val;}
+"const" {sendInformation();return CONST;}
+"string" {sendInformation();return STRING;}
+{string} { sendInformation();yylval.num = strdup(yytext); return STRING_val;}
+"char" {sendInformation();return CHAR;}
+{char} {sendInformation(); yylval.num = strdup(yytext); return CHAR_val;}
+{idf} {sendInformation();if(yyleng>10){printf("(%s) : Identificateur trop long", yytext);}yylval.sym = strdup(yytext);return IDF;}
+"printf" {sendInformation();return PRINTF;}
+{printf} { yylval.sym = strdup(yytext);sendInformation(); return FORMAT_STRING;}
+{commentaire} {sendInformation();}
+"=" {sendInformation();return ASSIG;}
+"+" {sendInformation();return PLUS;}  
+"+=" {sendInformation();return AddAff;}  
+"-" {sendInformation();return MINUS;}  
+"-=" {sendInformation();return MinAff;} 
+"*" {sendInformation();return MULT;}  
+"*=" {sendInformation();return MulAff;}
+"/" {sendInformation();return DIV;}   
+"/=" {sendInformation();return DivAff;}
+"=="|"<>" {sendInformation();return EG;}  
+"<" {sendInformation();return LES;}  
+">" {sendInformation();return SUP;}  
+"<=" {sendInformation();return LESE;}  
+">=" {sendInformation();return SUPE;}  
+"&&" {sendInformation();return AND;}
+"||" {sendInformation();return OR;}
+"!=" {sendInformation();return NOTEG;}
+"++" {sendInformation();return INCR;}
+"--" {sendInformation();return DECR;}
+"!" {sendInformation();return NOT;}
+":" {sendInformation();return DeuxPoints;}
+";" {
+    sendInformation();
+    if(calcule > 0)
+        printf(" \n le calcules est de ::: %f ,, %d \n",calcule,yylineo);
+    calcule = 0;
+    return SEMI;
+    }
+"," {sendInformation();return SEP;}
+"(" {sendInformation();return OPAR;}
+")" {sendInformation();return CPAR;}
+"{" {sendInformation();return OPEN;}
+"}" {sendInformation();return CLOSE;}
+"[" {sendInformation();return SBRA;}
+"]" {sendInformation();return CBRA;}
+[ \t]  { sendInformation(); }
+[\n] { yylineo++ ;col = 0;}
+. { printf("Erreur Lexical :::: %s a la ligne ::: %d et colonne : %d\n",yytext,yylineo,col); error = true; return yytext[0]; }
 
 %%
 
