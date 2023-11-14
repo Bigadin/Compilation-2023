@@ -1443,8 +1443,14 @@ yyreduce:
 #line 1444 "parser.tab.c"
     break;
 
+  case 8:
+#line 72 "parser.y"
+          {idf newIdf = {(yyvsp[0].sym),(yyvsp[0].sym)};}
+#line 1450 "parser.tab.c"
+    break;
 
-#line 1448 "parser.tab.c"
+
+#line 1454 "parser.tab.c"
 
       default: break;
     }

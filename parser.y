@@ -25,21 +25,21 @@ float real;
 char* sym;
 }
 
-%token <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
+%token <sym>CHAR <sym>STRING <sym>CONST <sym>BOOL <sym>INT <sym>FLOAT 
 
 %token <sym> IDF
 
 %token <sym>PLUS <sym>MINUS <sym>MULT <sym>DIV <sym>EG <sym>SUP <sym>LES <sym>LESE <sym>SUPE <sym>AND <sym>OR <sym>INCR  <sym>DECR <sym>ASSIG
 
-%token _TRUE _FALSE
+%token <sym>_TRUE <sym>_FALSE
 
 %token <sym>NOTEG
 
 %token <sym>BEG <sym>END <sym>RETURN <sym>SEMI  <sym>SEP
 
-%token <sym>FOR <sym>IF <sym>WHILE <sym>DO OPAR CPAR OPEN CLOSE ELSE
+%token <sym>FOR <sym>IF <sym>WHILE <sym>DO <sym>OPAR <sym>CPAR <sym>OPEN <sym>CLOSE <sym>ELSE
 
-%token <num>neg_FLOAT_val <num>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val
+%token <num>neg_FLOAT_val <real>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val
 
 
 %left PLUS MINUS
@@ -63,13 +63,13 @@ affline  Sinput
 
 // ça c'est decline c'est les lignes de declaration
 decline:
-type IDFSEP // declaration normal 
+type IDFSEP /* declaration normal */ 
 |CONST type AFFECTATION  // constante
 ;
 
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI  // int a;
+IDF SEMI  
 |IDF SEP IDFSEP // int a,IDFSEP
 |IDF ASSIG OPERATION SEP IDFSEP // int a = 4,IDFSEP
 |AFFECTATION // int a = 4;

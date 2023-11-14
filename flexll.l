@@ -1,7 +1,7 @@
 %{
 #include <stdlib.h>
 #include <stdio.h>
-
+#include "Sem.h"
 #include "parser.tab.h"
 extern yylineo;
 extern int col;
