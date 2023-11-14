@@ -26,6 +26,7 @@ void sendInformation(){
 %option yylineno
 
 
+
 Chiffre [0-9]
 Lettre [a-zA-Z]
 LettreM [A-Z]
@@ -39,8 +40,9 @@ int {Neg}?{Nombre}+
 char ['][^'][']
 string ["][^"]+["]  
 
-idf {Lettre}({Underscore}?({Lettre}|{Chiffre})*)*
-commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
+idf {LettreM}({Underscore}?({Lettre}|{Chiffre})*)*
+commentaire "/*"[^/*]*"*/"  
+printf \"[^"]*\" 
 
 %%
 "BEGIN" {sendInformation();
@@ -52,6 +54,18 @@ commentaire  ({"/*"} ([^"/*"]|\n)*?{"*/"})|({"{"} ([^"/*"]|\n)*?{"}"})
 "if" {sendInformation();return IF;}
 "else" {sendInformation();return ELSE;}
 "while" {sendInformation();return WHILE;}
+"break" {sendInformation();return BREAK;}
+"continue" {sendInformation();return CONTINUE;}
+"switch" {sendInformation();return SWITCH;}
+"case" {sendInformation();return CASE;}
+"default" {sendInformation();return DEFAULT;}
+"+=" {sendInformation();return AddAff;}  
+"-=" {sendInformation();return MinAff;} 
+"*=" {sendInformation();return MulAff;}
+"/=" {sendInformation();return DivAff;}
+":" {sendInformation();return DeuxPoints;}
+"[" {sendInformation();return SBRA;}
+"]" {sendInformation();return CBRA;}
 "do" {sendInformation();return DO;}
 "bool" {sendInformation();return BOOL;}
 "vrai"|"true" {sendInformation();return _TRUE;}

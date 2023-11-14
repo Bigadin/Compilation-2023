@@ -70,6 +70,7 @@ extern int yydebug;
     INCR = 276,
     DECR = 277,
     ASSIG = 278,
+<<<<<<< HEAD
     _TRUE = 279,
     _FALSE = 280,
     NOTEG = 281,
@@ -94,6 +95,47 @@ extern int yydebug;
     INT_val = 300,
     STRING_val = 301,
     CHAR_val = 302
+=======
+    NOT = 279,
+    AddAff = 280,
+    MinAff = 281,
+    MulAff = 282,
+    DivAff = 283,
+    _TRUE = 284,
+    _FALSE = 285,
+    NOTEG = 286,
+    BEG = 287,
+    END = 288,
+    RETURN = 289,
+    SEMI = 290,
+    SEP = 291,
+    DeuxPoints = 292,
+    FOR = 293,
+    IF = 294,
+    WHILE = 295,
+    DO = 296,
+    OPAR = 297,
+    CPAR = 298,
+    OPEN = 299,
+    CLOSE = 300,
+    ELSE = 301,
+    BREAK = 302,
+    DEFAULT = 303,
+    CASE = 304,
+    SWITCH = 305,
+    CONTINUE = 306,
+    PRINTF = 307,
+    SBRA = 308,
+    CBRA = 309,
+    neg_FLOAT_val = 310,
+    FLOAT_val = 311,
+    BOOL_val = 312,
+    neg_INT_val = 313,
+    INT_val = 314,
+    STRING_val = 315,
+    CHAR_val = 316,
+    FORMAT_STRING = 317
+>>>>>>> Lily
   };
 #endif
 
@@ -102,12 +144,20 @@ extern int yydebug;
 union YYSTYPE
 {
 #line 22 "parser.y"
+<<<<<<< HEAD
 
 int num;
 float real;
 char* sym;
 
 #line 111 "parser.tab.h"
+=======
+ 
+int num;
+char* sym;
+
+#line 125 "parser.tab.h"
+>>>>>>> Lily
 
 };
 typedef union YYSTYPE YYSTYPE;
