@@ -12,7 +12,7 @@ $(Binary): $(FlexFile) $(BisonFile)
 	$(BB) -d -t $(BisonFile)
 	$(FF) $(FlexFile)
 	$(CC) -o $@ $(CFile)
-	./program Tester.txt
+	./program Checker/Tester.txt
 
 clean:
 	rm -rf $(Binary) $(CFile)

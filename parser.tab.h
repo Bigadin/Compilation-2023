@@ -60,11 +60,11 @@
      INCR = 276,
      DECR = 277,
      ASSIG = 278,
-     AddAff = 279,
-     MulAff = 280,
+     NOT = 279,
+     AddAff = 280,
      MinAff = 281,
-     DivAff = 282,
-     NOT = 283,
+     MulAff = 282,
+     DivAff = 283,
      _TRUE = 284,
      _FALSE = 285,
      NOTEG = 286,
@@ -72,32 +72,33 @@
      END = 288,
      RETURN = 289,
      SEMI = 290,
-     EOL = 291,
-     SEP = 292,
-     OPEP = 293,
-     CLOP = 294,
-     DeuxPoints = 295,
-     OPECurlBrak = 296,
-     CLOCurlBrak = 297,
-     FOR = 298,
-     IF = 299,
-     WHILE = 300,
-     DO = 301,
-     ELSE = 302,
-     BREAK = 303,
-     CONTINUE = 304,
+     SEP = 291,
+     DeuxPoints = 292,
+     FOR = 293,
+     IF = 294,
+     WHILE = 295,
+     DO = 296,
+     OPAR = 297,
+     CPAR = 298,
+     OPEN = 299,
+     CLOSE = 300,
+     ELSE = 301,
+     BREAK = 302,
+     DEFAULT = 303,
+     CASE = 304,
      SWITCH = 305,
-     CASE = 306,
-     DEFAULT = 307,
-     PRINTF = 308,
-     neg_FLOAT_val = 309,
-     FLOAT_val = 310,
-     BOOL_val = 311,
-     neg_INT_val = 312,
-     INT_val = 313,
-     STRING_val = 314,
-     CHAR_val = 315,
-     FORMAT_STRING = 316
+     CONTINUE = 306,
+     PRINTF = 307,
+     SBRA = 308,
+     CBRA = 309,
+     neg_FLOAT_val = 310,
+     FLOAT_val = 311,
+     BOOL_val = 312,
+     neg_INT_val = 313,
+     INT_val = 314,
+     STRING_val = 315,
+     CHAR_val = 316,
+     FORMAT_STRING = 317
    };
 #endif
 
@@ -108,15 +109,15 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 7 ".\\parser.y"
-
-    int num;
-    char* sym;
+#line 22 "parser.y"
+ 
+int num;
+char* sym;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 120 "parser.tab.h"
+#line 121 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
