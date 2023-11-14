@@ -109,7 +109,7 @@ printf \"[^"]*\"
 "[" {sendInformation();return SBRA;}
 "]" {sendInformation();return CBRA;}
 [ \t]  { sendInformation(); }
-[\n] { yylineo++ ;col = 0;}
+[\n] { yylineo++ ;col = 0; printf("  %d  ",yylineo);}
 . { printf("Erreur Lexical :::: %s a la ligne ::: %d et colonne : %d\n",yytext,yylineo,col); error = true; return yytext[0]; }
 
 %%
