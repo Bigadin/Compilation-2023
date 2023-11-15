@@ -1,81 +1,3 @@
-<<<<<<< HEAD
-int a = 0.43,k = -8.43 ; 
-float b = "csq sdde";
-char mychar = 'c';
-
-
-int a = -12;
-
-int c, q_d = -4,game;
-float k,l,o;
-
-const bool ma = true;
-const float w = 8.09009;
-bool verif = faux;
-
-BEGIN
-if(a==43)kj=9000;else           noo=faux ;else if(OPp== -900) make= true;
-if(a == 90) 
-    vallsd= faux;
-if(a < 3){
-
-while(i < 4){
-    a = 43;
-}
-
-while(kl != 43)
-    k = 0;
-
-while(po >= 66){
-    if(k == 43)
-        l = 9;
-    while(o != 0){
-        o = 0 - 1;
-    if(k == 9 &&   k < 5 || o == 54 && polmm <= 984){
-        while(o != 43){
-            to = 98;
-            k = 3 + 4;
-        }
-        
-    }else{
-        while(lo == 89) p = 9;
-    }
-    }
-}
-
-
-a = 3;
-a = b + 4;
-if(a == 45){
-    x = X - y_ds;
-    c = vrai;
-    if(a >= b){ 
-        a = op_sd - -34;
-    }else if(c < 34){
-        k = 0;
-        boolean = vrai;
-    }
-    else{
-        bolean = faux;
-    }
-}else{
-    poo = wola + 43;
-}
-c = 4 + -5 + 3;
-x = 9 - 5 * 4*a,k = 90;
-
-verif = vrai;
-}
-
-a = 3;
-a = b + 4;
-
-c = 4 + 5 + 3;
-x = 9 - 5 * 4*a;
-
-
-verif = vrai;
-=======
 int A = 89,K = 89; 
 float B;
 
@@ -132,7 +54,7 @@ X = 9 - 5 * 4*A;
 Verif = vrai;
 
 for (int I = 0; I < 5; I++) {
-    Game = I;
+    Game = I; 
     printf("You chose option %s\n",A);
     if(A == B){
         I = H;
@@ -173,8 +95,7 @@ switch (Choice) {
         printf("Invalid choice\n");
 }
 return A;
-printf("You chose option 1\n");
+printf("You chose option 1\n"); /* commentaire */ 
 /*aaa*/ 
->>>>>>> Lily
 
 END

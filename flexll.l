@@ -1,7 +1,6 @@
 %{
 #include <stdlib.h>
 #include <stdio.h>
-#include "Sem.h"
 #include "parser.tab.h"
 extern yylineo;
 extern int col;
@@ -42,7 +41,6 @@ string ["][^"]+["]
 
 idf {LettreM}({Underscore}?({Lettre}|{Chiffre})*)*
 commentaire "/*"[^/*]*"*/"  
-printf \"[^"]*\" 
 
 %%
 "BEGIN" {sendInformation();
@@ -108,6 +106,11 @@ printf \"[^"]*\"
     printf("\n CHAR :=: %s",yylval);
     return CHAR_val;
     }
+
+"printf" {sendInformation();return PRINTF;}
+
+{commentaire} {sendInformation();}
+
 {idf} {
     sendInformation();
     if(yyleng>10){
@@ -130,6 +133,7 @@ printf \"[^"]*\"
 "&&" {sendInformation();return AND;}
 "||" {sendInformation();return OR;}
 "!=" {sendInformation();return NOTEG;}
+"!" {sendInformation();return NOT;}
 "++" {sendInformation();return INCR;}
 "--" {sendInformation();return DECR;}
 ";" {
