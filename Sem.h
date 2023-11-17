@@ -12,17 +12,18 @@ typedef struct TS{
 int tab_line_index;// c'est le compteur pour passer a la prochaine ligne du TS
 int TS_INDEX = 0;
 int lastTSindex;
-TS TS_tab[100];
+TS TS_tab[1000];
 
 int part_index = 0;
 
 // set up de la table
-
+int yylineo = 0;
+int col = 0;
 char currentType[20];
 int currentConst;
 
 int searchTS(char name[11]){
-    for(int i = 0;i <100; i++){
+    for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
 
         if (!strcmp(name,TS_tab[i].nom))
         {
@@ -39,7 +40,7 @@ void afficherIDF(){
     printf("\t| NomEntite | TypeEntite | Constant |\n");
     printf("________________________________________________________________________________\n");
     int i = 0;
-    for(int i = 0;i <100 && strcmp(TS_tab[i].nom,""); i++){
+    for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
         printf("\t|%10s |%10s | %9d  \n",TS_tab[i].nom,TS_tab[i].type,TS_tab[i].Isconst);
 
     }
@@ -68,6 +69,10 @@ void insertTS(char nom[11],char type[20],int Isconst){
         currentConst = 0;
         
     
+        }
+        else{
+            printf("\n ERREUR : Double declaration de la variable %s a la ligne %d colonne %d  \n",nom,yylineo,col);
+            
         }
 
     }

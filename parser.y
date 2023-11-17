@@ -1,16 +1,16 @@
 %{
 #include <stdio.h>
 #include<stdlib.h>
-#include "Sem.h"
+#include <string.h>
 #define YYSTYPE float
 
-int yylineo = 1; // les lignes
-int col = 1; // les colonnes
+extern int yylineo; // les lignes
+extern int col; // les colonnes
 int LastLeng =0; // le leng du dernier token trouvé
 char* cal = 0;
 int int_value = 0;
 float float_value = 1;
-char* string_value ;
+char string_value[20] ;
 union yylval;
 
 //
@@ -18,6 +18,7 @@ extern int operationIndex;
 
 extern char currentType[20];
 extern int currentConst;
+extern int part_index;
 
 %}
 
@@ -54,27 +55,21 @@ char* sym;
 
 // c'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
 input:
-decline  BEG affline END
+decline BEG {part_index = 1;} affline END {printf("\n checker done !!\n"); afficherIDF();}
 ;
-
-// ça c'est jsute pour ne pas avoir d'erreur si on ecris apres le END
-
-
 
 // ça c'est decline c'est les lignes de declaration
 decline:
 type IDFSEP decline // declaration normal 
-|CONST type AFFECTATION  decline// constante
+|CONST {currentConst = 1;}type AFFECTATION  decline// constante
 |
 ;
 
-
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI  {insertIdf(string_value,currentType,currentConst);} // int a;
-|IDF SEP {insertIdf(string_value,currentType,currentConst);} IDFSEP // int a,IDFSEP
-|IDF ASSIG OPERATION SEP {insertIdf(string_value,currentType,currentConst);} IDFSEP // int a = 4,IDFSEP
-|IDF ASSIG OPERATION SEMI {insertIdf(string_value,currentType,currentConst);}// int a = 4;
+IDF SEMI  {insertTS(string_value,currentType,currentConst);} // int a;
+|IDF SEP {insertTS(string_value,currentType,currentConst);} IDFSEP // int a,IDFSEP
+|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst);} IDFSEP // int a = 4,IDFSEP
 |AFFECTATION
 
 //ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
@@ -91,8 +86,8 @@ AFFECTATION affline
 
 //affectaion 
 AFFECTATION:
-IDF ASSIG OPERATION SEMI  // une seul affectation
-|IDF ASSIG OPERATION SEP AFFECTATION  // pluseur affectation a la fois
+IDF ASSIG OPERATION SEMI {insertTS(string_value,currentType,currentConst);}//// une seul affectation
+|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst);}  AFFECTATION  // pluseur affectation a la fois
 |IDF AFFOP OPERATION SEMI  // une seul affectation
 |TABLE SEMI
 |TABLE ASSIG OPEN inside_tab CLOSE SEMI
@@ -263,7 +258,11 @@ INCR|DECR
 
 //tous les type possibles
 type:
-FLOAT|INT|BOOL|CHAR|STRING
+FLOAT {strcpy(currentType,"float");}
+|INT {strcpy(currentType,"int");}
+|BOOL {strcpy(currentType,"bool");}
+|CHAR {strcpy(currentType,"char");}
+|STRING {strcpy(currentType,"string");}
 
 
 

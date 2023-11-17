@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "parser.tab.h"
+#include "Sem.h"
 extern yylineo;
 extern int col;
 extern LastLeng;
@@ -13,7 +14,7 @@ extern YYSTYPE yylval;
 
 extern int int_value;
 extern float float_value;
-extern float string_value;
+extern char string_value[11];
 
 void sendInformation(){
     col = col + yyleng;
@@ -73,37 +74,39 @@ commentaire "/*"[^/*]*"*/"
     yylval.real = atof(yytext);
     sendInformation();
     float_value = yylval.real;
-     printf("\n FLOAT :=: %f",float_value);
+     
     if(yytext[0] == '-'){
          return neg_FLOAT_val;
     }
       return FLOAT_val;
     }
-"int" {sendInformation();return INT;}
+"int" {sendInformation();
+        
+        return INT;}
 {int} {
      yylval.num = atoi(yytext);
      int_value = yylval.num;
      sendInformation();
-     printf("\n INT :=: %d",yylval);
+     
      if(yytext[0] == '-'){
           return neg_INT_val;
         }
     return INT_val;
     }
 
-"const" {sendInformation();return CONST;}
+"const" {sendInformation(); TS_tab[TS_INDEX].Isconst = true;tab_line_index++; return CONST;}
 "string" {sendInformation();return STRING;}
 {string} { 
     sendInformation();
     yylval.sym = strdup(yytext);
-    printf("\n STRING :=: %s",yylval);
+    
     return STRING_val;
     }
 "char" {sendInformation();return CHAR;}
 {char} {
     sendInformation();
     yylval.sym = strdup(yytext);
-    printf("\n CHAR :=: %s",yylval);
+    
     return CHAR_val;
     }
 
@@ -113,11 +116,12 @@ commentaire "/*"[^/*]*"*/"
 
 {idf} {
     sendInformation();
+    yylval.sym = strdup(yytext);
+    strcpy(string_value,yylval.sym) ;
     if(yyleng>10){
     printf("(%s) : Identificateur trop long", yytext);
     }
     yylval.sym = strdup(yytext);
-    printf("\n IDF :=: %s",yylval);
     return IDF;
     }
 "=" {sendInformation();return ASSIG;}
