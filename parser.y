@@ -16,6 +16,8 @@ union yylval;
 //
 extern int operationIndex;
 
+extern char currentType[20];
+extern int currentConst;
 
 %}
 
@@ -52,15 +54,7 @@ char* sym;
 
 // c'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
 input:
-decline  input
-|BEG  Sinput 
-;
-
-
-//ce input c'est celui des affection, apres le begin tout boucle ici
-Sinput:
-affline  Sinput
-|END {printf("\n\n Checker done you can run your program \n\n"); break;}
+decline  BEG affline END
 ;
 
 // ça c'est jsute pour ne pas avoir d'erreur si on ecris apres le END
@@ -69,26 +63,29 @@ affline  Sinput
 
 // ça c'est decline c'est les lignes de declaration
 decline:
-type IDFSEP // declaration normal 
-|CONST type AFFECTATION  // constante
+type IDFSEP decline // declaration normal 
+|CONST type AFFECTATION  decline// constante
+|
 ;
 
 
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI  {insertIdf($1);} // int a;
-|IDF SEP IDFSEP // int a,IDFSEP
-|IDF ASSIG OPERATION SEP IDFSEP // int a = 4,IDFSEP
-|AFFECTATION // int a = 4;
-
+IDF SEMI  {insertIdf(string_value,currentType,currentConst);} // int a;
+|IDF SEP {insertIdf(string_value,currentType,currentConst);} IDFSEP // int a,IDFSEP
+|IDF ASSIG OPERATION SEP {insertIdf(string_value,currentType,currentConst);} IDFSEP // int a = 4,IDFSEP
+|IDF ASSIG OPERATION SEMI {insertIdf(string_value,currentType,currentConst);}// int a = 4;
+|AFFECTATION
 
 //ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
 affline:
-AFFECTATION
-|IDF DecInc SEMI
-|BOUCLE 
-|RETURN OPERATION SEMI
-|STMT
+AFFECTATION affline
+|IDF DecInc SEMI affline
+|BOUCLE affline
+|RETURN OPERATION SEMI affline
+|STMT affline
+|IFCOND affline 
+|
 ;
 
 
@@ -127,8 +124,7 @@ VALUES
 |
 
 BOUCLE:
-IFCOND BOUCLE
-|FORCOND BOUCLE
+FORCOND BOUCLE
 |WHILECOND BOUCLE
 |DOWCOND BOUCLE
 |SWITCHCOMD
