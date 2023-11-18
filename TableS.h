@@ -65,6 +65,7 @@ void initialisation()
 
 
 /***Step 3: insertion des entititées lexicales dans les tables des symboles ***/
+/***y = Le type d'entité (0 pour IDF et CONST, 1 pour mots clés, 2 pour séparateurs)***/
 
 void inserer (char entite[], char code[],char type[],float val,int i,int y)
 {
