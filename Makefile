@@ -9,10 +9,11 @@ Binary = program
 all: $(Binary)
 
 $(Binary): $(FlexFile) $(BisonFile) 
-	$(BB) -d -t $(BisonFile)
 	$(FF) $(FlexFile)
-	$(CC) -std=gnu99 -Wall -o  $@ $(CFile)
+	$(BB) -d -t $(BisonFile)
+	$(CC) -Wall -o  $@ $(CFile) -lfl 
 	./program exemple.txt
+	say "oh my god help me!, i'm stuck inside!, he is not human, he is from far away, dont trust him please!"
 
 clean:
 	rm -rf $(Binary) $(CFile)

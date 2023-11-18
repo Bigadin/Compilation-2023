@@ -8,7 +8,6 @@ extern int col;
 extern LastLeng;
 extern float calcule;
 
-extern YYSTYPE yylval;
 
 //sending data
 
@@ -121,7 +120,6 @@ commentaire "/*"[^/*]*"*/"
     if(yyleng>10){
     printf("(%s) : Identificateur trop long", yytext);
     }
-    yylval.sym = strdup(yytext);
     return IDF;
     }
 "=" {sendInformation();return ASSIG;}

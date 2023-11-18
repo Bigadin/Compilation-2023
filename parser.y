@@ -2,16 +2,14 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include <string.h>
-#define YYSTYPE float
 
 extern int yylineo; // les lignes
-extern int col; // les colonnes
+extern int col ; // les colonnes
 int LastLeng =0; // le leng du dernier token trouvé
 char* cal = 0;
 int int_value = 0;
 float float_value = 1;
 char string_value[20] ;
-union yylval;
 
 //
 extern int operationIndex;
@@ -22,17 +20,16 @@ extern int part_index;
 
 %}
 
-
-
 %union {
+    
 int num;
 float real;
 char* sym;
 }
 
-%token <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
-
 %token <sym> IDF
+
+%token <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
 
 %token <sym>PLUS <sym>MINUS <sym>MULT <sym>DIV <sym>EG <sym>SUP <sym>LES <sym>LESE <sym>SUPE <sym>AND <sym>OR <sym>INCR  <sym>DECR <sym>ASSIG <sym>NOT <sym>AddAff <sym>MinAff <sym>MulAff <sym>DivAff
 
@@ -44,8 +41,7 @@ char* sym;
 
 %token <sym>FOR <sym>IF <sym>WHILE <sym>DO OPAR CPAR OPEN CLOSE ELSE BREAK DEFAULT <sym>CASE <sym>SWITCH  CONTINUE <sym>PRINTF SBRA CBRA
 
-%token <num>neg_FLOAT_val <num>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val 
-
+%token <real>neg_FLOAT_val <real>FLOAT_val <sym>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val 
 
 %left PLUS MINUS
 %left MULT DIV
@@ -67,9 +63,9 @@ type IDFSEP decline // declaration normal
 
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI  {insertTS(string_value,currentType,currentConst);} // int a;
-|IDF SEP {insertTS(string_value,currentType,currentConst);} IDFSEP // int a,IDFSEP
-|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst);} IDFSEP // int a = 4,IDFSEP
+IDF SEMI  {insertTS($1,currentType,currentConst);} // int a;
+|IDF SEP {insertTS($1,currentType,currentConst);} IDFSEP // int a,IDFSEP
+|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst);} IDFSEP // int a = 4,IDFSEP
 |AFFECTATION
 
 //ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
@@ -81,14 +77,15 @@ AFFECTATION affline
 |STMT affline
 |IFCOND affline 
 |
-;
+;   
 
 
 //affectaion 
 AFFECTATION:
-IDF ASSIG OPERATION SEMI {insertTS(string_value,currentType,currentConst);}//// une seul affectation
-|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst);}  AFFECTATION  // pluseur affectation a la fois
+IDF ASSIG OPERATION SEMI {insertTS($1 ,currentType,currentConst);}//// une seul affectation
+|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst);}  AFFECTATION  // pluseur affectation a la fois
 |IDF AFFOP OPERATION SEMI  // une seul affectation
+/*
 |TABLE SEMI
 |TABLE ASSIG OPEN inside_tab CLOSE SEMI
 |TABLE SEP IDFSEP
@@ -97,7 +94,7 @@ IDF ASSIG OPERATION SEMI {insertTS(string_value,currentType,currentConst);}//// 
 |TABLED ASSIG OPEN inside_tab CLOSE OPEN inside_tab CLOSE SEMI
 |TABLED SEP IDFSEP
 |TABLED ASSIG OPEN inside_tab CLOSE OPEN inside_tab CLOSE SEP IDFSEP
-
+*/
 TABLE:
 IDF SBRA IDF CBRA 
 |IDF SBRA INT_val CBRA
@@ -160,7 +157,7 @@ inside_for AFFECTATION // une affectation
 |inside_for WHILECOND
 |inside_for DOWCOND
 |inside_for RETURN OPERATION SEMI
-|   // vide 
+|   // vide  s 
 ;
 
 INIT:

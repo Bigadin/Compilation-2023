@@ -17,29 +17,28 @@ TS TS_tab[1000];
 int part_index = 0;
 
 // set up de la table
-int yylineo = 0;
-int col = 0;
+int yylineo = 1;
+int col = 1;
 char currentType[20];
-int currentConst;
+int currentConst = 0;
 
-int searchTS(char name[11]){
+TS* searchTS(char name[11]){
     for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
 
         if (!strcmp(name,TS_tab[i].nom))
         {
-            return 1;
+            return &TS_tab[i];
         }
 
     }
     
-    return -1;    
+    return NULL;    
 }
 void afficherIDF(){
     printf("\n/***************Table des symboles ******************/\n");
     printf("________________________________________________________________________________\n");
     printf("\t| NomEntite | TypeEntite | Constant |\n");
     printf("________________________________________________________________________________\n");
-    int i = 0;
     for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
         printf("\t|%10s |%10s | %9d  \n",TS_tab[i].nom,TS_tab[i].type,TS_tab[i].Isconst);
 
@@ -59,7 +58,7 @@ void Check(){
 }
 void insertTS(char nom[11],char type[20],int Isconst){
     if(part_index == 0){
-        if (searchTS(nom) == -1)
+        if (searchTS(nom) == NULL)
         {
         // on check le type de la valeur
         strcpy(TS_tab[lastTSindex ].nom,nom); 
@@ -76,6 +75,14 @@ void insertTS(char nom[11],char type[20],int Isconst){
         }
 
     }
-
-    
+    if(part_index == 1){
+        if(searchTS(nom) == NULL) {
+            printf("\n ERREUR : La variable %s n'est pas declarée a la ligne %d colonne %d  \n",nom,yylineo,col);
+            return;
+        }
+        if(searchTS(nom)->Isconst == 1){
+            printf("\n ERREUR : Vous modifiez la variable %s qui est une constante a la ligne %d colonne %d  \n",nom,yylineo,col);
+        }
+    }
 }
+

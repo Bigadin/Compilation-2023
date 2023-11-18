@@ -49,13 +49,13 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    CHAR = 258,
-    STRING = 259,
-    CONST = 260,
-    BOOL = 261,
-    INT = 262,
-    FLOAT = 263,
-    IDF = 264,
+    IDF = 258,
+    CHAR = 259,
+    STRING = 260,
+    CONST = 261,
+    BOOL = 262,
+    INT = 263,
+    FLOAT = 264,
     PLUS = 265,
     MINUS = 266,
     MULT = 267,
@@ -115,13 +115,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "parser.y"
+#line 23 "parser.y"
 
+    
 int num;
 float real;
 char* sym;
 
-#line 125 "parser.tab.h"
+#line 126 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
