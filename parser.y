@@ -120,8 +120,8 @@ FORCOND BOUCLE
 |WHILECOND BOUCLE
 |DOWCOND BOUCLE
 |SWITCHCOMD
-|
-
+| 
+ 
 //If condition
 IFCOND:
 IF OPAR comparaison CPAR OPEN inside_if CLOSE   //condition avec les accolade
