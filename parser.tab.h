@@ -97,8 +97,7 @@
      neg_INT_val = 313,
      INT_val = 314,
      STRING_val = 315,
-     CHAR_val = 316,
-     FORMAT_STRING = 317
+     CHAR_val = 316
    };
 #endif
 
@@ -109,9 +108,10 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 22 "parser.y"
- 
+#line 28 "parser.y"
+
 int num;
+float real;
 char* sym;
 
 

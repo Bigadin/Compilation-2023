@@ -1,26 +1,33 @@
 %{
 #include <stdio.h>
-#include "Sem.h"
-#define YYSTYPE float
+#include<stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
-int yylineo = 1; // les lignes
-int col = 1; // les colonnes
+extern int yylineo; // les lignes
+extern int col; // les colonnes
 int LastLeng =0; // le leng du dernier token trouvé
 char* cal = 0;
 int int_value = 0;
-float float_value = 0;
+float float_value = 1;
+char string_value[20] ;
 union yylval;
 
 //
 extern int operationIndex;
 
-
+extern char currentType[20];
+extern int currentConst;
+extern int part_index;
+extern char currentValue[20];
 
 %}
 
 
-%union { 
+
+%union {
 int num;
+float real;
 char* sym;
 }
 
@@ -30,7 +37,7 @@ char* sym;
 
 %token <sym>PLUS <sym>MINUS <sym>MULT <sym>DIV <sym>EG <sym>SUP <sym>LES <sym>LESE <sym>SUPE <sym>AND <sym>OR <sym>INCR  <sym>DECR <sym>ASSIG <sym>NOT <sym>AddAff <sym>MinAff <sym>MulAff <sym>DivAff
 
-%token _TRUE _FALSE
+%token <sym>_TRUE <sym>_FALSE
 
 %token <sym>NOTEG
 
@@ -38,62 +45,54 @@ char* sym;
 
 %token <sym>FOR <sym>IF <sym>WHILE <sym>DO OPAR CPAR OPEN CLOSE ELSE BREAK DEFAULT <sym>CASE <sym>SWITCH  CONTINUE <sym>PRINTF SBRA CBRA
 
-%token <num>neg_FLOAT_val <num>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val <sym>FORMAT_STRING
+%token <real>neg_FLOAT_val <real>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val 
 
-
+ 
 %left PLUS MINUS
 %left MULT DIV
 %start input
+
 
 %%
 
 // c'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
 input:
-decline  input
-|BEG  Sinput 
+decline BEG {part_index = 1;} affline END {printf("\n checker done !!\n"); afficherIDF();}
 ;
-
-
-//ce input c'est celui des affection, apres le begin tout boucle ici
-Sinput:
-affline  Sinput
-|END {printf("\n\n Checker done you can run your program \n\n"); break;}
-;
-
-// ça c'est jsute pour ne pas avoir d'erreur si on ecris apres le END
-
-
 
 // ça c'est decline c'est les lignes de declaration
 decline:
-type IDFSEP // declaration normal 
-|CONST type AFFECTATION  // constante
+type IDFSEP decline // declaration normal 
+|CONST {currentConst = 1;}type AFFECTATION  decline// constante
+|
 ;
-
 
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI // int a;
-|IDF SEP IDFSEP // int a,IDFSEP
-|IDF ASSIG OPERATION SEP IDFSEP // int a = 4,IDFSEP
-|AFFECTATION // int a = 4;
-
+IDF SEMI  {insertTS(string_value,currentType,currentConst,currentValue);} // int a;
+|IDF SEP {insertTS(string_value,currentType,currentConst, currentValue);} IDFSEP // int a,IDFSEP
+|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst, currentValue);} IDFSEP // int a = 4,IDFSEP
+|AFFECTATION
 
 //ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
 affline:
-AFFECTATION
-|IDF DecInc SEMI
-|BOUCLE 
-|RETURN OPERATION SEMI
-|STMT
+AFFECTATION affline
+|IDF DecInc SEMI affline {Var_non_dec($1);}
+|BOUCLE affline
+|RETURN OPERATION SEMI affline
+|STMT affline
+|IFCOND affline 
+|
 ;
 
 
 //affectaion 
 AFFECTATION:
-IDF ASSIG OPERATION SEMI  // une seul affectation
-|IDF ASSIG OPERATION SEP AFFECTATION  // pluseur affectation a la fois
-|IDF AFFOP OPERATION SEMI  // une seul affectation
+IDF ASSIG OPERATION SEMI {insertTS(string_value,currentType,currentConst, currentValue);
+                            Var_non_dec($1);}//// une seul affectation
+|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst, currentValue);
+                            Var_non_dec($1);}  AFFECTATION  // pluseur affectation a la fois, 
+|IDF AFFOP OPERATION SEMI  {Var_non_dec($1);}// une seul affectation
 |TABLE SEMI
 |TABLE ASSIG OPEN inside_tab CLOSE SEMI
 |TABLE SEP IDFSEP
@@ -124,8 +123,7 @@ VALUES
 |
 
 BOUCLE:
-IFCOND BOUCLE
-|FORCOND BOUCLE
+FORCOND BOUCLE
 |WHILECOND BOUCLE
 |DOWCOND BOUCLE
 |SWITCHCOMD
@@ -170,8 +168,8 @@ inside_for AFFECTATION // une affectation
 ;
 
 INIT:
-IDF ASSIG EXPRESSION
-|type IDF ASSIG EXPRESSION
+IDF ASSIG EXPRESSION {Var_non_dec($1);}
+|type IDF ASSIG EXPRESSION {part_index = 0; insertTS(string_value,currentType,currentConst,currentValue); part_index = 1;}
 
 //WHILE condition
 WHILECOND:
@@ -229,7 +227,7 @@ inside_case AFFECTATION // une affectation
 //comparaison
 comparaison:
     OPERATION cmp OPERATION // c'est opperation comparée a operation pour les if
-    |NOT IDF
+    |NOT IDF {Var_non_dec($2);}
     ; 
 
 
@@ -242,20 +240,20 @@ EXPRESSION // ça c'est pour evité des erreurs avec les affectations
 
 
 STMT:
-PRINTF OPAR FORMAT_STRING SEP IDF CPAR SEMI
-|PRINTF OPAR FORMAT_STRING CPAR SEMI
+PRINTF OPAR STRING_val SEP IDF CPAR SEMI
+|PRINTF OPAR STRING_val CPAR SEMI
 
 
 //Expression pour dire value ou idf
 EXPRESSION:
 VALUES
-|IDF
+|IDF {Var_non_dec($1);}
 
 
 
 // toute les op possibles
 Opp:
-PLUS {operationIndex = 0;}|MINUS{operationIndex = 1;}|MULT {operationIndex = 2;}|DIV{operationIndex = 3;}
+PLUS |MINUS|MULT |DIV
 AFFOP:
 AddAff|MinAff|MulAff|DivAff
 DecInc:
@@ -264,20 +262,50 @@ INCR|DECR
 
 //tous les type possibles
 type:
-FLOAT|INT|BOOL|CHAR|STRING
+FLOAT {strcpy(currentType,"float");}
+|INT {strcpy(currentType,"int");}
+|BOOL {strcpy(currentType,"bool");}
+|CHAR {strcpy(currentType,"char");}
+|STRING {strcpy(currentType,"string");}
 
 
 
 //toute les valeurs possibles
 VALUES:
-neg_FLOAT_val {OperationCalcule(float_value,operationIndex);}
-|FLOAT_val {OperationCalcule(float_value,operationIndex); }
-|_TRUE 
-|_FALSE
-|neg_INT_val {OperationCalcule(float_value,operationIndex);}
-|INT_val {OperationCalcule(float_value,operationIndex);}
-|STRING_val 
-|CHAR_val
+    neg_FLOAT_val {if(strcmp(currentType,"float") && part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |%f|, a la ligne %d\n", currentType, $1, yylineo) ;
+                    else
+                        sprintf(currentValue, "%.3f", $1);}  // Assuming neg_FLOAT_val is a float
+    | FLOAT_val {if(strcmp(currentType,"float")&& part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |%f|, a la ligne %d\n", currentType, $1, yylineo) ;
+                    else
+                        sprintf(currentValue, "%.3f", $1);}      // Assuming FLOAT_val is a float
+    | _TRUE {if(strcmp(currentType,"bool") && part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |true|, a la ligne %d\n", currentType, yylineo) ;
+                    else
+                        strcpy(currentValue, "true");}
+    | _FALSE { if(strcmp(currentType,"bool") && part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |false|, a la ligne %d\n", currentType, yylineo) ;
+                    else
+                        strcpy(currentValue, "false");}
+    | neg_INT_val {if(strcmp(currentType,"int") && part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |%d|, a la ligne %d\n", currentType, $1, yylineo) ;
+                    else
+                        sprintf(currentValue, "%d", $1);}    // Assuming neg_INT_val is an int
+    | INT_val {if(strcmp(currentType,"int") && part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |%d|, a la ligne %d\n", currentType, $1, yylineo) ;
+                    else
+                        sprintf(currentValue, "%d", $1);}        // Assuming INT_val is an int
+    | STRING_val {if(strcmp(currentType,"string") && part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |%s|, a la ligne %d\n", currentType, $1, yylineo) ;
+                    else
+                        strcpy(currentValue, $1);}
+    | CHAR_val {if(strcmp(currentType,"char") && part_index == 0) 
+                        printf("Erreur Non compatibilité de type entre %s et |%c|, a la ligne %d\n", currentType, $1, yylineo) ;
+                    else
+                        sprintf(currentValue, "'%c'", $1);}     // Assuming CHAR_val is a char
+    ;
+
 
 
 

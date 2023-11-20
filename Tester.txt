@@ -11,7 +11,8 @@ A = B + 4;
 C = 4 + 5 + 3;
 X = 9 - 5 * 4*A;
 Verif = vrai;
-for (int I = 5-5; i < 5; i++) {
+o = 9;
+for(int I = 5; 5+ 5; i + 4) {
     Game += I;
     return Game;
 }
