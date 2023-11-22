@@ -107,8 +107,7 @@ extern int yydebug;
     neg_INT_val = 313,
     INT_val = 314,
     STRING_val = 315,
-    CHAR_val = 316,
-    FORMAT_STRING = 317
+    CHAR_val = 316
   };
 #endif
 
@@ -116,9 +115,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "parser.y"
- 
+#line 28 "parser.y"
+
 int num;
+float real;
 char* sym;
 
 #line 125 "parser.tab.h"

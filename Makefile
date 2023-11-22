@@ -11,7 +11,7 @@ all: $(Binary)
 $(Binary): $(FlexFile) $(BisonFile) 
 	$(BB) -d -t $(BisonFile)
 	$(FF) $(FlexFile)
-	$(CC) -o $@ $(CFile)
+	$(CC) -std=gnu99 -Wall -o  $@ $(CFile)
 	./program exemple.txt
 
 clean:

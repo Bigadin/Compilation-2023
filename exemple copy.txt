@@ -1,0 +1,101 @@
+int A = 89,K = 89.78; 
+float B;
+
+
+int A = 1.2;
+
+int C, Q_d = 4,Game;
+float K,L,O;
+
+const bool Ma = true;
+const float W = 3.2;
+bool Verif = faux;
+int Tab[5], J[H][5]={5,4}{8,6};
+bool H[A], V;
+string T[] = {1,'s',-3};
+
+BEGIN
+if(A==43) Kj=9000;else           Noo=faux ;else if(OPp== 900) Make= true;
+if(A == 90) 
+    Vallsd= faux;
+if(A < 3)
+{
+    A = 3;
+    A = B + 4;
+    if(A == 45){
+        X = X - Y_ds;
+        C = vrai;
+        if(A >= B){ 
+            A = Op_sd - 34;
+        }else if(C < 34){
+            K = 0;
+            Boolean = vrai;
+        }
+        else{
+            Bolean = faux;
+        }
+    }else{
+        Poo = Wola + 43;
+    }
+    C = 4 + 5 + 3;
+    X = 9 - 5 * 4*A,K = 90;
+
+    Verif = vrai;
+}
+
+A = 3;
+A = B + 4;
+
+C = 4 + 5 + 3;
+X = 9 - 5 * 4*A;
+
+ Td[4][O_s] = {3,2,3}{4};
+
+Verif = vrai;
+
+for (int I = 0; I < 5; I++) {
+    Game = I; 
+    printf("You chose option %s\n",A);
+    if(A == B){
+        I = H;
+        printf("You chose option 1\n");
+        for (int I = 0; I < 5; I++) {
+            H = vrai;
+            printf("You chose option 1\n");
+        }
+    }
+    printf("You chose option 1\n");
+}
+while (C < 100) {
+    C *= 2;
+    C += 10;
+    B /= 1;
+    printf("You chose option 1\n");
+    J -=20;
+}
+do {
+    A++;
+    do {
+    A--;
+    printf("You chose option 1\n");
+} while (!A);
+} while (A > 0);
+
+switch (Choice) {
+    case 1:
+        printf("You chose option 1\n");
+        break;
+    case 2:
+        printf("You chose option 2\n");
+        break;
+    case 3:
+        printf("You chose option 3\n");
+        break;
+    default:
+        printf("Invalid choice\n");
+}
+return A;
+printf("You chose option 1\n"); /* commentaire */ 
+/*aaa*/ 
+
+END

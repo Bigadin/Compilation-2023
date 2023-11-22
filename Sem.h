@@ -1,35 +1,122 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 
-float calcule[4];
-int operationIndex = 0;
-//
+typedef struct TS{
+    char nom[11];
+    char type[20];
+    int Isconst;
+    char value[20];
 
+}TS;
+int tab_line_index;// c'est le compteur pour passer a la prochaine ligne du TS
+int TS_INDEX = 0;
+int lastTSindex;
+TS TS_tab[1000];
 
-// utiliser un arbre pour la priorité
+int part_index = 0;
 
-void OperationCalcule(float value,int index){
-    switch (index)
-    {
-    case 0:
-        calcule[index]+= value;
-        break;
-    case 1:
-        calcule[index]-= value;
-        break;
-    case 2:
-        calcule[index] *= value;
-        break;
-    case 3:
-        calcule[index] /= value;
-        break;
+// set up de la table
+int yylineo = 0;
+int col = 0;
+char currentType[20];
+char currentValue[20];
+int currentConst;
+bool isDec = 0;
+
+int searchTS(char name[11],char type[20]){
+    for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
+
+        if (!strcmp(name,TS_tab[i].type))
+        {
+            if(!strcmp(type,TS_tab[i].type)){
+                return 1;
+            }
+        }
+
+    }
     
-    default:
-        break;
+    return -1;    
+}
+void afficherIDF(){
+    printf("\n/***************Table des symboles ******************/\n");
+    printf("________________________________________________________________________________\n");
+    printf("\t| NomEntite | TypeEntite | Constant | Value\n");
+    printf("________________________________________________________________________________\n");
+    int i = 0;
+    for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
+        printf("\t|%10s |%10s | %9d | %9s \n",TS_tab[i].nom,TS_tab[i].type,TS_tab[i].Isconst,TS_tab[i].value);
+
     }
 }
 
-void returnCalcule(){
-    
+void Check(){
+    if(tab_line_index > 3){
+        TS_INDEX++;
+    }else if(tab_line_index == 3){
+        printf("\n    TYPE :::: %s  ",TS_tab[TS_INDEX].type);
+        printf("\n    IDF :::: %s  ",TS_tab[TS_INDEX].nom);
+        printf("\n    CONST :::: %d  ",TS_tab[TS_INDEX].Isconst);
 
+    }
+    
+}
+void insertTS(char nom[11],char type[20],int Isconst, char value[20]){
+    if(part_index == 0){
+        if (searchTS(nom,type) == 1)
+        {
+        // on check le type de la valeur
+        strcpy(TS_tab[lastTSindex ].nom,nom); 
+        strcpy(TS_tab[lastTSindex ].type,type); 
+        TS_tab[lastTSindex ].Isconst = Isconst; 
+        strcpy(TS_tab[lastTSindex].value,value);
+        lastTSindex++;
+        currentConst = 0;
+        currentValue[0]=0;
+        isDec = 0;
+        
+        
+    
+        }
+        else{
+            printf("\n ERREUR : Double declaration de la variable %s a la ligne %d colonne %d  \n",nom,yylineo,col);
+            
+        }
+
+    } 
+}
+
+void Var_non_dec (char var[11])
+{
+   // if((searchTS(var) == -1) && part_index == 1) 
+        printf("ERREUR SEMENTIQUE variable %s non declarer a la line %d colonne %d\n",var, yylineo, col);
+}
+
+void mettre_a_jour(char var[11], char value[20])
+{
+    if(part_index == 1)
+    {
+        for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
+            
+            if(strcmp(TS_tab[i].nom, var) && TS_tab[i].Isconst != 1){
+                strcpy(TS_tab[i].value ,value);
+            }
+            if(TS_tab[i].Isconst == 1 && strcpy(TS_tab[i].value ,value)){
+                printf("ERREUR SEMENTIQUE changement de valeur d'une constante %s a la ligne %d colenne %d\n", var, yylineo, col);
+            }
+        }
+    }
+}
+
+void get_val(char var[11]){
+    if(part_index == 1)
+    {
+        for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){
+            
+            if(strcmp(TS_tab[i].nom, var)){
+                return TS_tab[i].value;
+            }
+        }
+    }
 }
