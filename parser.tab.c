@@ -84,11 +84,12 @@ char string_value[20] ;
 extern int operationIndex;
 
 extern char currentType[20];
-extern int currentConst;
+extern int currentConst  ;
 extern int part_index;
+extern char assignType[20];
 
 
-#line 92 "parser.tab.c"
+#line 93 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -202,14 +203,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 23 "parser.y"
+#line 24 "parser.y"
 
     
 int num;
 float real;
 char* sym;
 
-#line 213 "parser.tab.c"
+#line 214 "parser.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -590,19 +591,19 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    54,    54,    54,    59,    60,    60,    61,    66,    67,
-      67,    68,    68,    69,    73,    74,    75,    76,    77,    78,
-      79,    85,    86,    86,    87,   119,   120,   121,   122,   123,
-     127,   128,   129,   130,   131,   135,   136,   137,   138,   139,
-     140,   141,   142,   143,   149,   152,   153,   154,   155,   156,
-     157,   158,   159,   160,   164,   165,   169,   172,   173,   174,
-     175,   176,   177,   178,   179,   180,   185,   187,   188,   189,
-     190,   191,   192,   193,   194,   195,   200,   202,   203,   204,
-     207,   208,   209,   210,   211,   212,   213,   214,   215,   216,
-     217,   222,   223,   229,   230,   231,   232,   236,   237,   242,
-     243,   249,   249,   249,   249,   251,   251,   251,   251,   253,
-     253,   258,   259,   260,   261,   262,   268,   269,   270,   271,
-     272,   273,   274,   275,   281,   281,   281,   281,   281,   281
+       0,    55,    55,    55,    60,    61,    61,    62,    67,    68,
+      68,    69,    69,    70,    74,    75,    76,    77,    78,    79,
+      80,    86,    87,    87,    88,   120,   121,   122,   123,   124,
+     128,   129,   130,   131,   132,   136,   137,   138,   139,   140,
+     141,   142,   143,   144,   150,   153,   154,   155,   156,   157,
+     158,   159,   160,   161,   165,   166,   170,   173,   174,   175,
+     176,   177,   178,   179,   180,   181,   186,   188,   189,   190,
+     191,   192,   193,   194,   195,   196,   201,   203,   204,   205,
+     208,   209,   210,   211,   212,   213,   214,   215,   216,   217,
+     218,   223,   224,   230,   231,   232,   233,   237,   238,   243,
+     244,   250,   250,   250,   250,   252,   252,   252,   252,   254,
+     254,   259,   260,   261,   262,   263,   269,   270,   271,   272,
+     273,   274,   275,   276,   282,   282,   282,   282,   282,   282
 };
 #endif
 
@@ -1614,85 +1615,133 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 54 "parser.y"
+#line 55 "parser.y"
             {part_index = 1;}
-#line 1620 "parser.tab.c"
+#line 1621 "parser.tab.c"
     break;
 
   case 3:
-#line 54 "parser.y"
+#line 55 "parser.y"
                                           {printf("\n checker done !!\n"); afficherIDF();}
-#line 1626 "parser.tab.c"
+#line 1627 "parser.tab.c"
     break;
 
   case 5:
-#line 60 "parser.y"
+#line 61 "parser.y"
        {currentConst = 1;}
-#line 1632 "parser.tab.c"
+#line 1633 "parser.tab.c"
     break;
 
   case 8:
-#line 66 "parser.y"
-          {insertTS((yyvsp[-1].sym),currentType,currentConst);}
-#line 1638 "parser.tab.c"
+#line 67 "parser.y"
+          {insertTS((yyvsp[-1].sym),currentType,currentConst,currentType);}
+#line 1639 "parser.tab.c"
     break;
 
   case 9:
-#line 67 "parser.y"
-         {insertTS((yyvsp[-1].sym),currentType,currentConst);}
-#line 1644 "parser.tab.c"
+#line 68 "parser.y"
+         {insertTS((yyvsp[-1].sym),currentType,currentConst,currentType);}
+#line 1645 "parser.tab.c"
     break;
 
   case 11:
-#line 68 "parser.y"
-                         {insertTS((yyvsp[-3].sym),currentType,currentConst);}
-#line 1650 "parser.tab.c"
+#line 69 "parser.y"
+                         {insertTS((yyvsp[-3].sym),currentType,currentConst,assignType);}
+#line 1651 "parser.tab.c"
     break;
 
   case 21:
-#line 85 "parser.y"
-                         {insertTS((yyvsp[-3].sym) ,currentType,currentConst);}
-#line 1656 "parser.tab.c"
+#line 86 "parser.y"
+                         {insertTS((yyvsp[-3].sym) ,currentType,currentConst,assignType);}
+#line 1657 "parser.tab.c"
     break;
 
   case 22:
-#line 86 "parser.y"
-                         {insertTS((yyvsp[-3].sym),currentType,currentConst);}
-#line 1662 "parser.tab.c"
+#line 87 "parser.y"
+                         {insertTS((yyvsp[-3].sym),currentType,currentConst,assignType );}
+#line 1663 "parser.tab.c"
     break;
 
   case 111:
-#line 258 "parser.y"
+#line 259 "parser.y"
       {strcpy(currentType,"float");}
-#line 1668 "parser.tab.c"
+#line 1669 "parser.tab.c"
     break;
 
   case 112:
-#line 259 "parser.y"
+#line 260 "parser.y"
      {strcpy(currentType,"int");}
-#line 1674 "parser.tab.c"
+#line 1675 "parser.tab.c"
     break;
 
   case 113:
-#line 260 "parser.y"
+#line 261 "parser.y"
       {strcpy(currentType,"bool");}
-#line 1680 "parser.tab.c"
+#line 1681 "parser.tab.c"
     break;
 
   case 114:
-#line 261 "parser.y"
+#line 262 "parser.y"
       {strcpy(currentType,"char");}
-#line 1686 "parser.tab.c"
+#line 1687 "parser.tab.c"
     break;
 
   case 115:
-#line 262 "parser.y"
+#line 263 "parser.y"
         {strcpy(currentType,"string");}
-#line 1692 "parser.tab.c"
+#line 1693 "parser.tab.c"
+    break;
+
+  case 116:
+#line 269 "parser.y"
+              {strcpy(assignType,"float");}
+#line 1699 "parser.tab.c"
+    break;
+
+  case 117:
+#line 270 "parser.y"
+           {strcpy(assignType,"float");}
+#line 1705 "parser.tab.c"
+    break;
+
+  case 118:
+#line 271 "parser.y"
+       {strcpy(assignType,"bool");}
+#line 1711 "parser.tab.c"
+    break;
+
+  case 119:
+#line 272 "parser.y"
+       {strcpy(assignType,"bool");}
+#line 1717 "parser.tab.c"
+    break;
+
+  case 120:
+#line 273 "parser.y"
+             {strcpy(assignType,"int");}
+#line 1723 "parser.tab.c"
+    break;
+
+  case 121:
+#line 274 "parser.y"
+         {strcpy(assignType,"int");}
+#line 1729 "parser.tab.c"
+    break;
+
+  case 122:
+#line 275 "parser.y"
+            {strcpy(assignType,"string");}
+#line 1735 "parser.tab.c"
+    break;
+
+  case 123:
+#line 276 "parser.y"
+         {strcpy(assignType,"char");}
+#line 1741 "parser.tab.c"
     break;
 
 
-#line 1696 "parser.tab.c"
+#line 1745 "parser.tab.c"
 
       default: break;
     }
@@ -1924,7 +1973,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 283 "parser.y"
+#line 284 "parser.y"
 
 
 // main pour pouvoir tester directement un fichier si il est valide ou pas

@@ -15,8 +15,9 @@ char string_value[20] ;
 extern int operationIndex;
 
 extern char currentType[20];
-extern int currentConst;
+extern int currentConst  ;
 extern int part_index;
+extern char assignType[20];
 
 %}
 
@@ -63,9 +64,9 @@ type IDFSEP decline // declaration normal
 
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI  {insertTS($1,currentType,currentConst);} // int a;
-|IDF SEP {insertTS($1,currentType,currentConst);} IDFSEP // int a,IDFSEP
-|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst);} IDFSEP // int a = 4,IDFSEP
+IDF SEMI  {insertTS($1,currentType,currentConst,currentType);} // int a;
+|IDF SEP {insertTS($1,currentType,currentConst,currentType);} IDFSEP // int a,IDFSEP
+|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst,assignType);} IDFSEP // int a = 4,IDFSEP
 |AFFECTATION
 
 //ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
@@ -82,8 +83,8 @@ AFFECTATION affline
 
 //affectaion 
 AFFECTATION:
-IDF ASSIG OPERATION SEMI {insertTS($1 ,currentType,currentConst);}//// une seul affectation
-|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst);}  AFFECTATION  // pluseur affectation a la fois
+IDF ASSIG OPERATION SEMI {insertTS($1 ,currentType,currentConst,assignType);}//// une seul affectation
+|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst,assignType );}  AFFECTATION  // pluseur affectation a la fois
 |IDF AFFOP OPERATION SEMI  // une seul affectation
 /*
 |TABLE SEMI
@@ -265,14 +266,14 @@ FLOAT {strcpy(currentType,"float");}
 
 //toute les valeurs possibles
 VALUES:
-neg_FLOAT_val 
-|FLOAT_val 
-|_TRUE 
-|_FALSE
-|neg_INT_val 
-|INT_val 
-|STRING_val 
-|CHAR_val
+neg_FLOAT_val {strcpy(assignType,"float");}
+|FLOAT_val {strcpy(assignType,"float");}
+|_TRUE {strcpy(assignType,"bool");}
+|_FALSE{strcpy(assignType,"bool");}
+|neg_INT_val {strcpy(assignType,"int");}
+|INT_val {strcpy(assignType,"int");}
+|STRING_val {strcpy(assignType,"string");}
+|CHAR_val{strcpy(assignType,"char");}
 
 
 

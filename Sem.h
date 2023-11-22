@@ -12,6 +12,7 @@ typedef struct TS{
 int tab_line_index;// c'est le compteur pour passer a la prochaine ligne du TS
 int TS_INDEX = 0;
 int lastTSindex;
+char assignType[20];
 TS TS_tab[1000];
 
 int part_index = 0;
@@ -56,16 +57,26 @@ void Check(){
     }
     
 }
-void insertTS(char nom[11],char type[20],int Isconst){
+void insertTS(char nom[11],char type[20],int Isconst,char assignType[20]){
+
+   
+
     if(part_index == 0){
         if (searchTS(nom) == NULL)
         {
-        // on check le type de la valeur
-        strcpy(TS_tab[lastTSindex ].nom,nom); 
-        strcpy(TS_tab[lastTSindex ].type,type); 
-        TS_tab[lastTSindex ].Isconst = Isconst; 
-        lastTSindex++;
-        currentConst = 0;
+            
+            if(!strcmp(type,assignType) || (assignType == "int" && type == "float")){
+
+                strcpy(TS_tab[lastTSindex ].nom,nom); 
+                strcpy(TS_tab[lastTSindex ].type,type); 
+                TS_tab[lastTSindex ].Isconst = Isconst; 
+                lastTSindex++;
+                currentConst = 0;
+            }
+            else{
+                printf("\n ERREUR : la valeur affecte a %s n'est pas du meme type ligne %d colonne %d\n",nom,yylineo,col);
+                return;
+            }
         
     
         }
@@ -82,7 +93,15 @@ void insertTS(char nom[11],char type[20],int Isconst){
         }
         if(searchTS(nom)->Isconst == 1){
             printf("\n ERREUR : Vous modifiez la variable %s qui est une constante a la ligne %d colonne %d  \n",nom,yylineo,col);
+            return;
+        }
+         char _affectationType[20];
+        strcpy(_affectationType,searchTS(nom)->type); 
+        if(strcmp(_affectationType,assignType) ){
+            printf("\n ERREUR : la valeur affecte a %s n'est pas du meme type ligne %d colonne %d\n     %s :-> %s",nom,yylineo,col,_affectationType,assignType);
+            return;
         }
     }
 }
+
 
