@@ -125,7 +125,7 @@ commentaire "/*"[^/*]*"*/"
 "=" {sendInformation();return ASSIG;}
 "+" {sendInformation();return PLUS;}  
 "-" {sendInformation();return MINUS;}  
-"*" {sendInformation();return MULT;}  
+"*" {sendInformation();return MULT;}   
 "/" {sendInformation();return DIV;}   
 "=="|"<>" {sendInformation();return EG;}  
 "<" {sendInformation();return LES;}  
