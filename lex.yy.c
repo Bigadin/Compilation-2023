@@ -1098,7 +1098,7 @@ case 35:
 YY_RULE_SETUP
 #line 117 "flexll.l"
 {
-    sendInformation();
+    sendInformation();  
     yylval.sym = strdup(yytext);
     strcpy(string_value,yylval.sym) ;
     insertTS(yylval.sym,"/",0,"/");

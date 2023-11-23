@@ -109,7 +109,7 @@ void mettre_a_jour(char var[11], char value[20])
     }
 }
 
-void get_val(char var[11]){
+int get_val(char var[11]){
     if(part_index == 1)
     {
         for(int i = 0;i <1000 && strcmp(TS_tab[i].nom,""); i++){

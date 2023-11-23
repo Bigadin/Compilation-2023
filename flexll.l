@@ -115,7 +115,7 @@ commentaire "/*"[^/*]*"*/"
 {commentaire} {sendInformation();}
 
 {idf} {
-    sendInformation();
+    sendInformation();  
     yylval.sym = strdup(yytext);
     strcpy(string_value,yylval.sym) ;
     insertTS(yylval.sym,"/",0,"/");
