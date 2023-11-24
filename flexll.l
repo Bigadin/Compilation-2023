@@ -66,8 +66,8 @@ commentaire "/*"[^/*]*"*/"
 "]" {sendInformation();return CBRA;}
 "do" {sendInformation();return DO;}
 "bool" {sendInformation();return BOOL;}
-"vrai"|"true" {sendInformation();return _TRUE;}
-"faux"|"false" {sendInformation();return _FALSE;} 
+"vrai"|"true" {sendInformation();yylval.sym = yytext; return _TRUE;}
+"faux"|"false" {sendInformation();yylval.sym = yytext;return _FALSE;} 
 "float" {sendInformation();return FLOAT;}
 {float} {
     yylval.real = atof(yytext);
@@ -109,14 +109,16 @@ commentaire "/*"[^/*]*"*/"
     return CHAR_val;
     }
 
-"printf" {sendInformation();return PRINTF;}
+"printf" {sendInformation();return PRINTF;} 
 
 {commentaire} {sendInformation();}
 
 {idf} {
     sendInformation();
-    yylval.sym = strdup(yytext);
+    yylval.sym = strdup(yytext);  
     strcpy(string_value,yylval.sym) ;
+    insertTS_flex(string_value);             
+    
     if(yyleng>10){
     printf("(%s) : Identificateur trop long", yytext);
     }

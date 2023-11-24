@@ -1,8 +1,7 @@
 %{
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <string.h>
-
 extern int yylineo; // les lignes
 extern int col ; // les colonnes
 int LastLeng =0; // le leng du dernier token trouvé
@@ -13,11 +12,15 @@ char string_value[20] ;
 
 //
 extern int operationIndex;
-
+ 
 extern char currentType[20];
 extern int currentConst  ;
 extern int part_index;
 extern char assignType[20];
+extern char assignValue[20];
+
+//deep shit
+extern char aaa[20];
 
 %}
 
@@ -61,12 +64,12 @@ type IDFSEP decline // declaration normal
 |CONST {currentConst = 1;}type AFFECTATION  decline// constante
 |
 ;
-
+ 
 // c'est les declaration possible
 IDFSEP:
-IDF SEMI  {insertTS($1,currentType,currentConst,currentType);} // int a;
-|IDF SEP {insertTS($1,currentType,currentConst,currentType);} IDFSEP // int a,IDFSEP
-|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst,assignType);} IDFSEP // int a = 4,IDFSEP
+IDF SEMI  {insertTS($1,currentType,currentConst,currentType,"0");} // int a;
+|IDF SEP {insertTS($1,currentType,currentConst,currentType,"0");} IDFSEP // int a,IDFSEP
+|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst,assignType,assignValue);} IDFSEP // int a = 4,IDFSEP
 |AFFECTATION
 
 //ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
@@ -83,8 +86,8 @@ AFFECTATION affline
 
 //affectaion 
 AFFECTATION:
-IDF ASSIG OPERATION SEMI {insertTS($1 ,currentType,currentConst,assignType);}//// une seul affectation
-|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst,assignType );}  AFFECTATION  // pluseur affectation a la fois
+IDF ASSIG OPERATION SEMI {insertTS($1 ,currentType,currentConst,assignType,assignValue);}//// une seul affectation
+|IDF ASSIG OPERATION SEP {insertTS($1,currentType,currentConst,assignType,assignValue );}  AFFECTATION  // pluseur affectation a la fois
 |IDF AFFOP OPERATION SEMI  // une seul affectation
 /*
 |TABLE SEMI
@@ -229,8 +232,10 @@ comparaison:
 OPERATION:
 EXPRESSION // ça c'est pour evité des erreurs avec les affectations
 |EXPRESSION DecInc
-|OPERATION Opp OPERATION  
-|EXPRESSION Opp EXPRESSION 
+|OPERATION PLUS EXPRESSION 
+|OPERATION MINUS EXPRESSION  
+|OPERATION DIV EXPRESSION 
+|OPERATION MULT EXPRESSION 
 
 
 STMT:
@@ -241,13 +246,9 @@ PRINTF OPAR STRING_val SEP IDF CPAR SEMI
 //Expression pour dire value ou idf
 EXPRESSION:
 VALUES
-|IDF
+|IDF {strcpy(assignType,aaa);}
 
 
-
-// toute les op possibles
-Opp:
-PLUS |MINUS|MULT |DIV
 AFFOP:
 AddAff|MinAff|MulAff|DivAff
 DecInc:
@@ -266,14 +267,14 @@ FLOAT {strcpy(currentType,"float");}
 
 //toute les valeurs possibles
 VALUES:
-neg_FLOAT_val {strcpy(assignType,"float");}
-|FLOAT_val {strcpy(assignType,"float");}
-|_TRUE {strcpy(assignType,"bool");}
-|_FALSE{strcpy(assignType,"bool");}
-|neg_INT_val {strcpy(assignType,"int");}
-|INT_val {strcpy(assignType,"int");}
-|STRING_val {strcpy(assignType,"string");}
-|CHAR_val{strcpy(assignType,"char");}
+neg_FLOAT_val {strcpy(assignType,"float");sprintf(assignValue,"%f",$1);}
+|FLOAT_val {strcpy(assignType,"float");sprintf(assignValue,"%f",$1);}
+|_TRUE {strcpy(assignType,"bool");strcpy(assignValue,$1);}
+|_FALSE{strcpy(assignType,"bool");strcpy(assignValue,$1);}
+|neg_INT_val {strcpy(assignType,"int");sprintf(assignValue,"%d",$1);}
+|INT_val {strcpy(assignType,"int"); sprintf(assignValue,"%d",$1);}
+|STRING_val {strcpy(assignType,"string");strcpy(assignValue,$1);}
+|CHAR_val{strcpy(assignType,"char");strcpy(assignValue,$1);}
 
 
 

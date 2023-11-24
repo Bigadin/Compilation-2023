@@ -1,20 +1,19 @@
-float A = 89.34,K = 89.0; 
+const float A = 89.34,K = 89.0; 
 float B;
 
 int C, Q_d = 4,Game;
 float L,O;
-
+char TheChar = 'l';
+string Rhestring = "kfkkf";
 const bool Ma = true;
 const float W = 2.23;
 bool Verif = faux;
 bool  V;
 
 BEGIN
-K = 2.33;
+K = 2.5;
 C = 2;
 L = 90.43;
-if(A == 34){
-    
-}
+
 
 END

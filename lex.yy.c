@@ -998,12 +998,12 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 69 "flexll.l"
-{sendInformation();return _TRUE;}
+{sendInformation();yylval.sym = yytext; return _TRUE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 70 "flexll.l"
-{sendInformation();return _FALSE;} 
+{sendInformation();yylval.sym = yytext;return _FALSE;} 
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
@@ -1085,7 +1085,7 @@ YY_RULE_SETUP
 case 33:
 YY_RULE_SETUP
 #line 112 "flexll.l"
-{sendInformation();return PRINTF;}
+{sendInformation();return PRINTF;} 
 	YY_BREAK
 case 34:
 /* rule 34 can match eol */
@@ -1098,8 +1098,10 @@ YY_RULE_SETUP
 #line 116 "flexll.l"
 {
     sendInformation();
-    yylval.sym = strdup(yytext);
+    yylval.sym = strdup(yytext);  
     strcpy(string_value,yylval.sym) ;
+    insertTS_flex(string_value);             
+    
     if(yyleng>10){
     printf("(%s) : Identificateur trop long", yytext);
     }
@@ -1108,87 +1110,87 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 125 "flexll.l"
+#line 127 "flexll.l"
 {sendInformation();return ASSIG;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 126 "flexll.l"
+#line 128 "flexll.l"
 {sendInformation();return PLUS;}  
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 127 "flexll.l"
+#line 129 "flexll.l"
 {sendInformation();return MINUS;}  
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 128 "flexll.l"
+#line 130 "flexll.l"
 {sendInformation();return MULT;}   
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 129 "flexll.l"
+#line 131 "flexll.l"
 {sendInformation();return DIV;}   
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 130 "flexll.l"
+#line 132 "flexll.l"
 {sendInformation();return EG;}  
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 131 "flexll.l"
+#line 133 "flexll.l"
 {sendInformation();return LES;}  
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 132 "flexll.l"
+#line 134 "flexll.l"
 {sendInformation();return SUP;}  
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 133 "flexll.l"
+#line 135 "flexll.l"
 {sendInformation();return LESE;}  
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 134 "flexll.l"
+#line 136 "flexll.l"
 {sendInformation();return SUPE;}  
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 135 "flexll.l"
+#line 137 "flexll.l"
 {sendInformation();return AND;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 136 "flexll.l"
+#line 138 "flexll.l"
 {sendInformation();return OR;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 137 "flexll.l"
+#line 139 "flexll.l"
 {sendInformation();return NOTEG;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 138 "flexll.l"
+#line 140 "flexll.l"
 {sendInformation();return NOT;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 139 "flexll.l"
+#line 141 "flexll.l"
 {sendInformation();return INCR;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 140 "flexll.l"
+#line 142 "flexll.l"
 {sendInformation();return DECR;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 141 "flexll.l"
+#line 143 "flexll.l"
 {
     sendInformation();
     return SEMI;
@@ -1196,51 +1198,51 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 145 "flexll.l"
+#line 147 "flexll.l"
 {sendInformation();return SEP;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 146 "flexll.l"
+#line 148 "flexll.l"
 {sendInformation();return OPAR;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 147 "flexll.l"
+#line 149 "flexll.l"
 {sendInformation();return CPAR;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 148 "flexll.l"
+#line 150 "flexll.l"
 {sendInformation();return OPEN;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 149 "flexll.l"
+#line 151 "flexll.l"
 {sendInformation();return CLOSE;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 150 "flexll.l"
+#line 152 "flexll.l"
 { sendInformation(); }
 	YY_BREAK
 case 59:
 /* rule 59 can match eol */
 YY_RULE_SETUP
-#line 151 "flexll.l"
+#line 153 "flexll.l"
 { yylineo++ ;col = 0;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 152 "flexll.l"
+#line 154 "flexll.l"
 { printf("\nErreur Lexical : %s a la ligne : %d et colonne : %d\n",yytext,yylineo,col); return yytext[0]; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 154 "flexll.l"
+#line 156 "flexll.l"
 ECHO;
 	YY_BREAK
-#line 1244 "lex.yy.c"
+#line 1246 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2257,7 +2259,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 154 "flexll.l"
+#line 156 "flexll.l"
 
 
 
