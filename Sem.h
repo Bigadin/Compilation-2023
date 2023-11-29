@@ -10,13 +10,20 @@ typedef struct TS{
     char value[30];
 }TS;
 
+typedef struct Node{
+    float val;
+    struct Node* mult;
+    struct Node* add;
+
+}Node;
+
+char op = '+';
 int tab_line_index;// c'est le compteur pour passer a la prochaine ligne du TS
 int TS_INDEX = 0;
 int lastTSindex;
 char assignType[20];
 char assignValue[20] = "0";
 TS TS_tab[1000];
-
 int part_index = 0;
 
 // set up de la table
@@ -79,6 +86,7 @@ void insertTS(char nom[11],char type[20],int Isconst,char assignType[20],char as
         {
             strcpy(theActualIDF->type,type); 
             strcpy(theActualIDF->value,assignValue); 
+            
             theActualIDF->Isconst = Isconst; 
             currentConst = 0;
 
@@ -112,6 +120,56 @@ void insertTS(char nom[11],char type[20],int Isconst,char assignType[20],char as
         strcpy(searchTS(nom)->value,assignValue);
     }
 }
+void createNode(Node** r, float data) {
+    *r = (Node*)malloc(sizeof(Node));
+    if (*r != NULL) {
+        (*r)->val = data;
+        (*r)->add = NULL;
+        (*r)->mult = NULL;
+    }
+}
 
+Node* insert( Node** r, float data) {
+    Node* root;
+    root = *r;
+    if (root == NULL) {
 
+        createNode(root,data);
+        return;
+    }
+    
+   // if(root->add == NULL && (op == '*'|| op == '/')){
+   //     root->mult = insert(&(root->mult),data);
+   // }
+    if (op == '+') {
+
+        root->add = insert(&(root->add), data);
+
+    } 
+    else if(op == '*'){
+        root->add = insert(&(root->add),data);
+    
+    }
+      return root;
+
+}
+void printTree(struct Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    printTree(root->add);
+    printf("  %f  ", root->val);
+    printTree(root->mult);
+}
+void deleteTree(struct Node* root) {
+    if (root == NULL) {
+        return;
+    }
+
+    deleteTree(root->add);
+    deleteTree(root->mult);
+    root = NULL;
+
+    free(root);
+}
 

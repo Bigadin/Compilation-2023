@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "parser.tab.h"
-#include "Sem.h"
+
 extern yylineo;
 extern int col;
 extern LastLeng;
@@ -93,7 +93,7 @@ commentaire "/*"[^/*]*"*/"
     return INT_val;
     }
 
-"const" {sendInformation(); TS_tab[TS_INDEX].Isconst = true;tab_line_index++; return CONST;}
+"const" {sendInformation(); /*TS_tab[TS_INDEX].Isconst = true;tab_line_index++;*/ return CONST;}
 "string" {sendInformation();return STRING;}
 {string} { 
     sendInformation();
