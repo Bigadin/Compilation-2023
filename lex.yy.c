@@ -1048,7 +1048,7 @@ YY_RULE_SETUP
 case 28:
 YY_RULE_SETUP
 #line 96 "flexll.l"
-{sendInformation(); TS_tab[TS_INDEX].Isconst = true;tab_line_index++; return CONST;}
+{sendInformation();  return CONST;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP

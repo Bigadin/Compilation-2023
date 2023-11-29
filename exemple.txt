@@ -1,4 +1,4 @@
-const float A = 89.34,K = 89.0; 
+ float A = 89.34,K = 89.0; 
 float B;
 
 int C, Q_d = 4,Game;
