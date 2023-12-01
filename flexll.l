@@ -15,6 +15,9 @@ extern YYSTYPE yylval;
 extern int int_value;
 extern float float_value;
 extern char string_value[11];
+extern int currentConst;
+extern bool isEndOfLine = 0;
+extern bool beg = 0;
 
 void sendInformation(){
     col = col + yyleng;
