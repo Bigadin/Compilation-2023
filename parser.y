@@ -11,9 +11,11 @@ int int_value = 0;
 float float_value = 1;
 char string_value[20] ;
  
-//
-extern int operationIndex;
+//operation semantique
+extern char op;
+char currentOp = '+';
 Node* op_tree;  
+// _____________
 extern char currentType[20];
 extern int currentConst  ;
 extern int part_index;
@@ -22,6 +24,25 @@ extern char assignValue[20];
 
 //deep shit
 extern char aaa[20];
+
+void SendToCalculator(float i, char op) {
+    switch (op) {
+        case '+':
+        case '*':
+            insert(&op_tree, i);
+            break;
+        case '-':
+            insert(&op_tree, -i);
+            break;
+        case '/':
+            insert(&op_tree, 1 / i);
+            break;
+        default:
+            // Gérer le cas par défaut ici
+            break;
+    }
+}
+
 
 %}
 
@@ -70,7 +91,7 @@ type IDFSEP decline // declaration normal
 IDFSEP:
 IDF SEMI  {insertTS($1,currentType,currentConst,currentType,"0");} // int a;
 |IDF SEP {insertTS($1,currentType,currentConst,currentType,"0");} IDFSEP // int a,IDFSEP
-|IDF ASSIG {createNode(&op_tree,0);} OPERATION {printTree(op_tree);}SEP {insertTS($1,currentType,currentConst,assignType,assignValue);deleteTree(op_tree);} IDFSEP // int a = 4,IDFSEP
+|IDF ASSIG  OPERATION {printTree(op_tree);}  SEP {sprintf(assignValue,"%f",SumArbre(&op_tree)); insertTS($1,currentType,currentConst,assignType,assignValue);deleteTree(&op_tree);currentOp ='+';} IDFSEP // int a = 4,IDFSEP
 |AFFECTATION
 
 //ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
@@ -83,14 +104,27 @@ AFFECTATION affline
 |IFCOND affline 
 |
 ;   
-  
+   
 
 //affectaion 
 AFFECTATION:
-IDF ASSIG {createNode(&op_tree,1);} OPERATION SEMI {insertTS($1 ,currentType,currentConst,assignType,assignValue); deleteTree(op_tree);}//// une seul affectation
-|IDF ASSIG {createNode(&op_tree,1);} OPERATION SEP {insertTS($1,currentType,currentConst,assignType,assignValue );deleteTree(op_tree); }  AFFECTATION  // pluseur affectation a la fois
+IDF ASSIG OPERATION {printTree(op_tree);} SEMI {
+    if(!strcmp(assignType,"float") || !strcmp(assignType,"int"))
+        sprintf(assignValue,"%f",SumArbre(&op_tree));
+        
+    insertTS($1 ,currentType,currentConst,assignType,assignValue);
+    deleteTree(&op_tree); 
+    currentOp = '+';}//// une seul affectation
+|IDF ASSIG OPERATION {printTree(op_tree);}  SEP {
+    if(!strcmp(assignType,"float") || !strcmp(assignType,"int"))
+         sprintf(assignValue,"%f",SumArbre(&op_tree));
+
+    insertTS($1,currentType,currentConst,assignType,assignValue );
+    deleteTree(&op_tree); 
+    currentOp = '+';}  AFFECTATION  // pluseur affectation a la fois
 |IDF AFFOP OPERATION SEMI  // une seul affectation
-/*
+
+/* 
 |TABLE SEMI
 |TABLE ASSIG OPEN inside_tab CLOSE SEMI   
 |TABLE SEP IDFSEP
@@ -231,12 +265,12 @@ comparaison:
 
 // opperation 
 OPERATION:
-EXPRESSION // ça c'est pour evité des erreurs avec les affectations
+EXPRESSION 
 |EXPRESSION DecInc
-|OPERATION PLUS EXPRESSION 
-|OPERATION MINUS EXPRESSION   
-|OPERATION DIV EXPRESSION 
-|OPERATION MULT EXPRESSION 
+|OPERATION {op = '+';currentOp = '+';} PLUS EXPRESSION 
+|OPERATION {op = '+';currentOp = '-';} MINUS EXPRESSION   
+|OPERATION {op = '*';currentOp = '/';} DIV EXPRESSION 
+|OPERATION {op = '*';currentOp = '*';} MULT EXPRESSION 
 
 
 STMT:
@@ -247,7 +281,12 @@ PRINTF OPAR STRING_val SEP IDF CPAR SEMI
 //Expression pour dire value ou idf
 EXPRESSION:
 VALUES
-|IDF {strcpy(assignType,aaa);}
+|IDF {strcpy(assignType,aaa);
+if(!strcmp(assignType,"float") || !strcmp(assignType,"int")){
+SendToCalculator(atof(searchTS($1)->value),currentOp);
+}else{
+    printf("\n ERREUR : Le type assigné n'est pas le bon !! \n");
+}}
 
 
 AFFOP:
@@ -270,13 +309,12 @@ FLOAT {strcpy(currentType,"float");}
 VALUES:
 neg_FLOAT_val {
         strcpy(assignType,"float");
-    //op_tree = insert(op_tree,assignValue);
+        SendToCalculator($1,currentOp);
     sprintf(assignValue,"%f",$1);
     }
 |FLOAT_val {
         strcpy(assignType,"float");
-    //op_tree = insert(op_tree,assignValue);
-       // insert(&op_tree,2);
+        SendToCalculator($1,currentOp);
     sprintf(assignValue,"%f",$1);
     }
 |_TRUE {
@@ -289,12 +327,12 @@ neg_FLOAT_val {
     }
 |neg_INT_val {
         strcpy(assignType,"int");
-    //op_tree = insert(op_tree,assignValue);
+        SendToCalculator($1,currentOp);
     sprintf(assignValue,"%d",$1);
     }
 |INT_val {
         strcpy(assignType,"int");
-    //op_tree = insert(op_tree,assignValue); 
+        SendToCalculator($1,currentOp); 
     sprintf(assignValue,"%d",$1);
     }
 |STRING_val {

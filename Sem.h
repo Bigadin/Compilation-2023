@@ -112,7 +112,7 @@ void insertTS(char nom[11],char type[20],int Isconst,char assignType[20],char as
         }
          char _affectationType[20];
         strcpy(_affectationType,searchTS(nom)->type); 
-        if(strcmp(_affectationType,assignType) ){
+        if(strcmp(_affectationType,assignType)){
             printf("\n ERREUR : la valeur affecte a %s n'est pas du meme type ligne %d colonne %d\n     %s :-> %s",nom,yylineo,col,_affectationType,assignType);
             return;
         }
@@ -130,46 +130,63 @@ void createNode(Node** r, float data) {
 }
 
 Node* insert( Node** r, float data) {
-    Node* root;
-    root = *r;
-    if (root == NULL) {
-
-        createNode(root,data);
-        return;
+    
+    if (*r == NULL) {
+        createNode(r,data);
+        return *r;
     }
     
-   // if(root->add == NULL && (op == '*'|| op == '/')){
-   //     root->mult = insert(&(root->mult),data);
-   // }
-    if (op == '+') {
+    if((*r)->add == NULL && (op == '*'|| op == '/')){
+        (*r)->mult = insert(&((*r)->mult),data);
+    }
+    else if (op == '+') {
 
-        root->add = insert(&(root->add), data);
+        (*r)->add = insert(&((*r)->add), data);
 
     } 
     else if(op == '*'){
-        root->add = insert(&(root->add),data);
+        (*r)->add = insert(&((*r)->add),data);
     
     }
-      return root;
+      return *r;
 
+}
+float SumArbre(Node** root) {
+    if ((*root) == NULL) {
+        return 0;
+    }
+
+    float droite = SumArbre(&(*root)->mult);
+    float gauche = SumArbre(&(*root)->add);
+
+    if ((*root)->mult != NULL) {
+        // Multiplication du plus à droite avec celui d'avant
+        return droite * ((*root)->val) + gauche;
+    } else {
+        // Addition du plus à gauche avec la multiplication d'avant
+        return gauche + ((*root)->val);
+    }
 }
 void printTree(struct Node* root) {
     if (root == NULL) {
         return;
     }
     printTree(root->add);
-    printf("  %f  ", root->val);
     printTree(root->mult);
+    printf("  %f  ", root->val);
+
 }
-void deleteTree(struct Node* root) {
-    if (root == NULL) {
+void deleteTree(Node** root) {
+
+    if (*root == NULL) {
         return;
     }
 
-    deleteTree(root->add);
-    deleteTree(root->mult);
-    root = NULL;
+    deleteTree(&(*root)->add);
+    deleteTree(&(*root)->mult);
+    *root = NULL;
 
-    free(root);
+    free(*root);
+    printf(" END OPERATION ");
 }
 

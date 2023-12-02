@@ -1,4 +1,7 @@
- float A = 3.4; 
+float Bd = 23 + 12 * 3 - 22 / 4 , NH,Jhh = 67 * 54;
+bool I = true;
+float Sum;
 BEGIN
-
+Bd = Jhh + Bd - 100.0;
+Sum = Bd - Jhh;
 END
