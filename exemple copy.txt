@@ -10,9 +10,9 @@ float K,L,O;
 const bool Ma = true;
 const float W = 3.2;
 bool Verif = faux;
-int Tab[5], J[H][5]={5,4}{8,6};
-bool H[A], V;
-string T[] = {1,'s',-3};
+/*int Tab[5], J[H][5]={5,4}{8,6};*/
+/*bool H[A], V;*/
+/*string T[] = {1,'s',-3};*/
 
 BEGIN
 if(A==43) Kj=9000;else           Noo=faux ;else if(OPp== 900) Make= true;
@@ -49,7 +49,7 @@ A = B + 4;
 C = 4 + 5 + 3;
 X = 9 - 5 * 4*A;
 
- Td[4][O_s] = {3,2,3}{4};
+/* Td[4][O_s] = {3,2,3}{4};*/
 
 Verif = vrai;
 

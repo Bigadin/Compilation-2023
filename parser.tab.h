@@ -39,13 +39,13 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     CHAR = 258,
-     STRING = 259,
-     CONST = 260,
-     BOOL = 261,
-     INT = 262,
-     FLOAT = 263,
-     IDF = 264,
+     IDF = 258,
+     CHAR = 259,
+     STRING = 260,
+     CONST = 261,
+     BOOL = 262,
+     INT = 263,
+     FLOAT = 264,
      PLUS = 265,
      MINUS = 266,
      MULT = 267,
@@ -56,24 +56,24 @@
      LESE = 272,
      SUPE = 273,
      AND = 274,
-     OR = 275,
-     INCR = 276,
-     DECR = 277,
-     ASSIG = 278,
-     NOT = 279,
-     AddAff = 280,
-     MinAff = 281,
-     MulAff = 282,
-     DivAff = 283,
-     _TRUE = 284,
-     _FALSE = 285,
-     NOTEG = 286,
-     BEG = 287,
-     END = 288,
-     RETURN = 289,
-     SEMI = 290,
-     SEP = 291,
-     DeuxPoints = 292,
+     NOTEG = 275,
+     OR = 276,
+     INCR = 277,
+     DECR = 278,
+     ASSIG = 279,
+     NOT = 280,
+     AddAff = 281,
+     MinAff = 282,
+     MulAff = 283,
+     DivAff = 284,
+     BEG = 285,
+     END = 286,
+     RETURN = 287,
+     SEMI = 288,
+     SEP = 289,
+     DeuxPoints = 290,
+     SBRA = 291,
+     CBRA = 292,
      FOR = 293,
      IF = 294,
      WHILE = 295,
@@ -89,15 +89,15 @@
      SWITCH = 305,
      CONTINUE = 306,
      PRINTF = 307,
-     SBRA = 308,
-     CBRA = 309,
-     neg_FLOAT_val = 310,
-     FLOAT_val = 311,
-     BOOL_val = 312,
-     neg_INT_val = 313,
-     INT_val = 314,
-     STRING_val = 315,
-     CHAR_val = 316
+     neg_FLOAT_val = 308,
+     FLOAT_val = 309,
+     BOOL_val = 310,
+     neg_INT_val = 311,
+     INT_val = 312,
+     STRING_val = 313,
+     CHAR_val = 314,
+     _TRUE = 315,
+     _FALSE = 316
    };
 #endif
 
@@ -108,8 +108,9 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 28 "parser.y"
+#line 51 "parser.y"
 
+    
 int num;
 float real;
 char* sym;
@@ -117,7 +118,7 @@ char* sym;
 
 
 /* Line 1676 of yacc.c  */
-#line 121 "parser.tab.h"
+#line 122 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
