@@ -84,7 +84,7 @@ char* sym;
 // C'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
 input:
 decline BEG {part_index = 1;} affline END {
-                                                printf("\n checker done !!\n"); 
+                                                printf("\n CHECKER DONE !!\n"); 
                                                 afficherTS();}
 ;
 
