@@ -1,138 +1,215 @@
 %{
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+#include "Sem.h"
 
-extern int yylineo; // les lignes
-extern int col; // les colonnes
-int LastLeng =0; // le leng du dernier token trouvé
-char* cal = 0;
+
+extern int yylineo; // Les lignes
+extern int col ; // Les colonnes
+extern char currentType[20];
+extern int currentConst  ;
+extern int part_index;
+extern char assignType[20];
+extern char assignValue[20];
+extern char tp[20];
+extern int s;
+int LastLeng =0; // Le length du dernier token trouvé
 int int_value = 0;
 float float_value = 1;
 char string_value[20] ;
-union yylval;
+ 
+// Operation semantique
+extern char op;
+char currentOp = '+';
+Node* op_tree;  
 
-//
-extern int operationIndex;
 
-extern char currentType[20];
-extern int currentConst;
-extern int part_index;
-extern char currentValue[20];
+// Inserer les donnees dans l'arbre
 
+void SendToCalculator(float i, char op) {
+    switch (op) {
+        case '+':
+        case '*':
+            insert(&op_tree, i);
+            break;
+        case '-':
+            insert(&op_tree, -i);
+            break;
+        case '/':
+            insert(&op_tree, 1 / i);
+            break;
+        default:
+            // Gérer le cas par défaut ici
+            break;
+    }
+}
 %}
 
 
 
 %union {
+    
 int num;
 float real;
 char* sym;
 }
 
-%token <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
 
-%token <sym> IDF
+%token <sym> IDF <sym>CHAR <sym>STRING <sym>CONST BOOL <sym>INT <sym>FLOAT
 
-%token <sym>PLUS <sym>MINUS <sym>MULT <sym>DIV <sym>EG <sym>SUP <sym>LES <sym>LESE <sym>SUPE <sym>AND <sym>OR <sym>INCR  <sym>DECR <sym>ASSIG <sym>NOT <sym>AddAff <sym>MinAff <sym>MulAff <sym>DivAff
+%token <sym>PLUS <sym>MINUS <sym>MULT <sym>DIV <sym>EG <sym>SUP <sym>LES <sym>LESE <sym>SUPE <sym>AND 
+
+%token <sym>NOTEG <sym>OR <sym>INCR  <sym>DECR <sym>ASSIG <sym>NOT <sym>AddAff <sym>MinAff <sym>MulAff <sym>DivAff
+
+%token <sym>BEG <sym>END <sym>RETURN <sym>SEMI  <sym>SEP <sym>DeuxPoints SBRA CBRA
+
+%token <sym>FOR <sym>IF <sym>WHILE <sym>DO OPAR CPAR OPEN CLOSE ELSE BREAK DEFAULT <sym>CASE <sym>SWITCH  CONTINUE <sym>PRINTF 
+
+%token <real>neg_FLOAT_val <real>FLOAT_val <sym>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val 
 
 %token <sym>_TRUE <sym>_FALSE
 
-%token <sym>NOTEG
 
-%token <sym>BEG <sym>END <sym>RETURN <sym>SEMI  <sym>SEP <sym>DeuxPoints
-
-%token <sym>FOR <sym>IF <sym>WHILE <sym>DO OPAR CPAR OPEN CLOSE ELSE BREAK DEFAULT <sym>CASE <sym>SWITCH  CONTINUE <sym>PRINTF SBRA CBRA
-
-%token <real>neg_FLOAT_val <real>FLOAT_val <num>BOOL_val <num>neg_INT_val <num>INT_val <sym>STRING_val <sym>CHAR_val 
-
- 
 %left PLUS MINUS
-%left MULT DIV
-%start input
+%right MULT DIV
 
+
+%start input
 
 %%
 
-// c'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
+
+
+// C'est le start, il envoie vers decline et check que BEGIN est ecris avant les affectations
 input:
-decline BEG {part_index = 1;} affline END {printf("\n checker done !!\n"); afficherIDF();}
+decline BEG {part_index = 1;} affline END {
+                                                printf("\n CHECKER DONE !!\n"); 
+                                                afficherTS();}
 ;
 
-// ça c'est decline c'est les lignes de declaration
+
+// Ca c'est decline c'est les lignes de declaration
 decline:
-type IDFSEP decline // declaration normal 
-|CONST {currentConst = 1;}type AFFECTATION  decline// constante
-|
+type IDFSEP decline // Declaration normal 
+|CONST {currentConst = 1;} type AFFECTATION  decline // Declaration d'une constante
+|       // Ne rien declarer
 ;
+ 
 
-// c'est les declaration possible
+// Les declaration possible
 IDFSEP:
-IDF SEMI  {insertTS(string_value,currentType,currentConst,currentValue);} // int a;
-|IDF SEP {insertTS(string_value,currentType,currentConst, currentValue);} IDFSEP // int a,IDFSEP
-|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst, currentValue);} IDFSEP // int a = 4,IDFSEP
+IDF SEMI  {insertTS($1,currentType,currentConst,currentType,"0");}                  // int a;
+|IDF SEP {insertTS($1,currentType,currentConst,currentType,"0");} IDFSEP            // int a,IDFSEP
+|IDF ASSIG  OPERATION {printtree(op_tree);}  SEP {
+                                                    sprintf(assignValue,"%f",SumArbre(&op_tree)); 
+                                                    s = 1;
+                                                    insertTS($1,currentType,currentConst,assignType,assignValue);deleteTree(&op_tree);
+                                                    currentOp ='+';
+                                                    s=0;} 
+                                            IDFSEP                                  // int a = 4,IDFSEP
 |AFFECTATION
+|TABLE SEMI // tab[];
+|TABLE ASSIG OPEN inside_tab CLOSE SEMI                                             //tab[] = {1,2,3};
+|TABLE SEP IDFSEP 
+|TABLE ASSIG OPEN inside_tab CLOSE SEP IDFSEP 
+|TABLED SEMI //tab[][];
+|TABLED ASSIG OPEN inside_tab CLOSE OPEN inside_tab CLOSE SEMI                      //tab[] = {1,2,3}{4,5,6};
+|TABLED SEP IDFSEP 
+|TABLED ASSIG OPEN inside_tab CLOSE OPEN inside_tab CLOSE SEP IDFSEP
 
-//ça c'est affline, les lignes de tout ce qu'il y a dans BEGIN
+
+// Ca c'est affline, les lignes de tout ce qu'il y a dans BEGIN
 affline:
 AFFECTATION affline
-|IDF DecInc SEMI affline {Var_non_dec($1);}
+|IDF DecInc {printtree(op_tree);} SEMI {    // Operation d'incrementation et decrementation a revoir!!!
+                                            if(!strcmp(assignType,"float") || !strcmp(assignType,"int")){
+                                                SendToCalculator(atof(searchTS($1)->value),currentOp);
+                                                SendToCalculator(1,currentOp);
+                                                sprintf(assignValue,"%f",SumArbre(&op_tree));};
+        
+                                            s = 1;
+                                            insertTS($1 ,currentType,currentConst,assignType,assignValue); 
+                                            s=0;
+                                            deleteTree(&op_tree); 
+                                            currentOp = '+';}
+                                    affline
 |BOUCLE affline
 |RETURN OPERATION SEMI affline
 |STMT affline
-|IFCOND affline 
 |
-;
+;   
+   
 
-
-//affectaion 
+// Les affectations
 AFFECTATION:
-IDF ASSIG OPERATION SEMI {insertTS(string_value,currentType,currentConst, currentValue);
-                            Var_non_dec($1);}//// une seul affectation
-|IDF ASSIG OPERATION SEP {insertTS(string_value,currentType,currentConst, currentValue);
-                            Var_non_dec($1);}  AFFECTATION  // pluseur affectation a la fois, 
-|IDF AFFOP OPERATION SEMI  {Var_non_dec($1);}// une seul affectation
-|TABLE SEMI
-|TABLE ASSIG OPEN inside_tab CLOSE SEMI
-|TABLE SEP IDFSEP
-|TABLE ASSIG OPEN inside_tab CLOSE SEP IDFSEP
-|TABLED SEMI
-|TABLED ASSIG OPEN inside_tab CLOSE OPEN inside_tab CLOSE SEMI
-|TABLED SEP IDFSEP
-|TABLED ASSIG OPEN inside_tab CLOSE OPEN inside_tab CLOSE SEP IDFSEP
+IDF ASSIG OPERATION {printtree(op_tree);} SEMI {
+                                                    if(!strcmp(assignType,"float") || !strcmp(assignType,"int"))
+                                                        sprintf(assignValue,"%f",SumArbre(&op_tree));
+            
+                                                    s = 1; 
+                                                    insertTS($1 ,currentType,currentConst,assignType,assignValue); 
+                                                    s=0;
+                                                    deleteTree(&op_tree); 
+                                                    currentOp = '+';}    // Une seul affectation
+|IDF ASSIG OPERATION {printtree(op_tree);}  SEP {
+                                                    if(!strcmp(assignType,"float") || !strcmp(assignType,"int"))
+                                                        sprintf(assignValue,"%f",SumArbre(&op_tree));
 
+                                                    insertTS($1,currentType,currentConst,assignType,assignValue );
+                                                    deleteTree(&op_tree); 
+                                                    currentOp = '+';}  
+                                            AFFECTATION                 // Plusieur affectation a la fois
+|IDF AFFOP EXPRESSION {printtree(op_tree);} SEMI {
+                                                    s=0;
+                                                    if(!strcmp(assignType,"float") || !strcmp(assignType,"int"))
+                                                        SendToCalculator(atof(searchTS($1)->value),currentOp);
+                                                    sprintf(assignValue,"%f",SumArbre(&op_tree));
+
+                                                    insertTS($1,currentType,currentConst,assignType,assignValue );
+                                                    deleteTree(&op_tree); 
+                                                    currentOp = '+';}   // Une seul affectation avec += , -= ...
+
+
+// Declaration des tableaux
 TABLE:
-IDF SBRA IDF CBRA 
-|IDF SBRA INT_val CBRA
-|IDF SBRA CBRA
+IDF SBRA IDF CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA INT_val CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+// Declaration des tableaux a deux dimension
 TABLED:
-IDF SBRA IDF CBRA SBRA IDF CBRA
-|IDF SBRA INT_val CBRA SBRA IDF CBRA
-|IDF SBRA CBRA SBRA IDF CBRA
-|IDF SBRA IDF CBRA SBRA INT_val CBRA 
-|IDF SBRA INT_val CBRA SBRA INT_val CBRA 
-|IDF SBRA CBRA SBRA INT_val CBRA 
-|IDF SBRA IDF CBRA SBRA CBRA 
-|IDF SBRA INT_val CBRA SBRA CBRA 
-|IDF SBRA CBRA SBRA CBRA 
+IDF SBRA IDF CBRA SBRA IDF CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA INT_val CBRA SBRA IDF CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA CBRA SBRA IDF CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA IDF CBRA SBRA INT_val CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA INT_val CBRA SBRA INT_val CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA CBRA SBRA INT_val CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA IDF CBRA SBRA CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA INT_val CBRA SBRA CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
+|IDF SBRA CBRA SBRA CBRA {insertTS($1,currentType,currentConst,currentType,"0");}
 
+// Possibilites d'affectation pour les tableaux
 inside_tab:
 VALUES
 |VALUES SEP inside_tab
+
 |
 
+
+// Les differentes boucles
 BOUCLE:
 FORCOND BOUCLE
 |WHILECOND BOUCLE
 |DOWCOND BOUCLE
 |SWITCHCOMD
-|
+| 
+ 
 
-//If condition
+
+// If condition
 IFCOND:
-IF OPAR comparaison CPAR OPEN inside_if CLOSE   //condition avec les accolade
-|IF OPAR comparaison CPAR  AFFECTATION   //condition direct
+IF OPAR comparaison CPAR OPEN inside_if CLOSE   // Condition avec les accolade
+|IF OPAR comparaison CPAR  AFFECTATION   // Condition direct
 |IFCOND ELSE IFCOND  // ELSE IF
 |IFCOND ELSE OPEN inside_if CLOSE   // ELSE
 |IFCOND ELSE  inside_if    // ELSE direct
@@ -140,16 +217,17 @@ IF OPAR comparaison CPAR OPEN inside_if CLOSE   //condition avec les accolade
 // inside if, pour tout ce qui est possible dans un if
 inside_if:
 inside_if AFFECTATION // une affectation
-|inside_if EXPRESSION DecInc SEMI
-|inside_if STMT 
-|inside_if IFCOND // une autre condition
-|inside_if FORCOND
+|inside_if EXPRESSION DecInc SEMI 
+|inside_if STMT // Un printf
+|inside_if IFCOND // Une autre condition
+|inside_if FORCOND // Autres boucles
 |inside_if WHILECOND
 |inside_if DOWCOND
-|inside_if RETURN OPERATION SEMI
+|inside_if RETURN OPERATION SEMI // Un return
 |   // vide 
 ;
-//return
+
+
 
 //For condition
 FORCOND:
@@ -168,8 +246,11 @@ inside_for AFFECTATION // une affectation
 ;
 
 INIT:
-IDF ASSIG EXPRESSION {Var_non_dec($1);}
-|type IDF ASSIG EXPRESSION {part_index = 0; insertTS(string_value,currentType,currentConst,currentValue); part_index = 1;}
+IDF ASSIG EXPRESSION
+|type IDF ASSIG EXPRESSION {part_index = 0; insertTS($2 ,currentType,currentConst,assignType,assignValue); part_index = 1;} 
+// On ajoute les variables declarer dans la table des symboles 
+
+
 
 //WHILE condition
 WHILECOND:
@@ -187,9 +268,12 @@ inside_while AFFECTATION // une affectation
 |   // vide 
 ;
 
+
+
 //DO WHILE 
 DOWCOND:
 DO OPEN inside_dowhile CLOSE WHILE OPAR comparaison CPAR SEMI
+
 inside_dowhile:
 inside_dowhile AFFECTATION // une affectation
 |inside_dowhile EXPRESSION DecInc SEMI
@@ -202,14 +286,18 @@ inside_dowhile AFFECTATION // une affectation
 |   // vide 
 ;
 
+
+
 //SWITCH CASE:
 SWITCHCOMD:
 SWITCH OPAR IDF CPAR OPEN inside_switch CLOSE
+
 inside_switch:
 CASE VALUES DeuxPoints inside_case inside_switch
 |DEFAULT DeuxPoints inside_case
 |
 ;
+
 inside_case:
 inside_case AFFECTATION // une affectation
 |inside_case EXPRESSION DecInc SEMI
@@ -224,43 +312,78 @@ inside_case AFFECTATION // une affectation
 |   // vide 
 ;
 
-//comparaison
+
+
+// Comparaison
 comparaison:
-    OPERATION cmp OPERATION // c'est opperation comparée a operation pour les if
-    |NOT IDF {Var_non_dec($2);}
-    ; 
+OPERATION cmp OPERATION  // C'est une opperation comparée a une autre operation pour les if
+|NOT IDF
+; 
 
 
-// opperation 
+
+// Opperation 
 OPERATION:
-EXPRESSION // ça c'est pour evité des erreurs avec les affectations
+EXPRESSION 
+|NOT IDF
 |EXPRESSION DecInc
-|OPERATION Opp OPERATION  
-|EXPRESSION Opp EXPRESSION 
+|OPERATION {op = '+';currentOp = '+';} PLUS EXPRESSION 
+|OPERATION {op = '+';currentOp = '-';} MINUS EXPRESSION   
+|OPERATION {op = '*';currentOp = '/';} DIV EXPRESSION 
+|OPERATION {op = '*';currentOp = '*';} MULT EXPRESSION 
 
 
-STMT:
-PRINTF OPAR STRING_val SEP IDF CPAR SEMI
-|PRINTF OPAR STRING_val CPAR SEMI
 
-
-//Expression pour dire value ou idf
+// Expression pour dire value ou idf
 EXPRESSION:
 VALUES
-|IDF {Var_non_dec($1);}
+|IDF {
+        strcpy(assignType,tp);
+        verif($1);
+        if(!strcmp(assignType,"float") || !strcmp(assignType,"int")){
+            SendToCalculator(atof(searchTS($1)->value),currentOp);
+        }else{
+                printf("\n ERREUR SYNTAXIQUE: Le type assigne a %s  a la ligne %d colonne %d n'est pas le bon !! \n", $1, yylineo, col);}}
 
 
 
-// toute les op possibles
-Opp:
-PLUS |MINUS|MULT |DIV
+// Tous les comparateur possibles
+cmp:
+EG|SUP|LES|SUPE|LESE|NOTEG
+
+// Les operants
 AFFOP:
-AddAff|MinAff|MulAff|DivAff
+AddAff {
+            s = 1;
+            verif($1);
+            s = 0; 
+            op = '+';
+            currentOp = '+';} 
+|MinAff {
+            s = 1; 
+            verif($1);
+            s = 0; 
+            op = '+';
+            currentOp = '-';} 
+|MulAff {
+            s = 1;
+            verif($1);
+            s = 0; 
+            op = '*';
+            currentOp = '*';} 
+|DivAff {   
+            s = 1;
+            verif($1);
+            s = 0; 
+            op = '*';
+            currentOp = '/';}
+
 DecInc:
-INCR|DECR
+INCR {s = 1; verif($1);s = 0; op = '+';currentOp = '+';}|DECR {s = 1; verif($1);s = 0; op = '+';currentOp = '-';}
 
 
-//tous les type possibles
+
+// Tous les types possibles
 type:
 FLOAT {strcpy(currentType,"float");}
 |INT {strcpy(currentType,"int");}
@@ -270,48 +393,50 @@ FLOAT {strcpy(currentType,"float");}
 
 
 
-//toute les valeurs possibles
+// Toute les valeurs possibles
 VALUES:
-    neg_FLOAT_val {if(strcmp(currentType,"float") && part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |%f|, a la ligne %d\n", currentType, $1, yylineo) ;
-                    else
-                        sprintf(currentValue, "%.3f", $1);}  // Assuming neg_FLOAT_val is a float
-    | FLOAT_val {if(strcmp(currentType,"float")&& part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |%f|, a la ligne %d\n", currentType, $1, yylineo) ;
-                    else
-                        sprintf(currentValue, "%.3f", $1);}      // Assuming FLOAT_val is a float
-    | _TRUE {if(strcmp(currentType,"bool") && part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |true|, a la ligne %d\n", currentType, yylineo) ;
-                    else
-                        strcpy(currentValue, "true");}
-    | _FALSE { if(strcmp(currentType,"bool") && part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |false|, a la ligne %d\n", currentType, yylineo) ;
-                    else
-                        strcpy(currentValue, "false");}
-    | neg_INT_val {if(strcmp(currentType,"int") && part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |%d|, a la ligne %d\n", currentType, $1, yylineo) ;
-                    else
-                        sprintf(currentValue, "%d", $1);}    // Assuming neg_INT_val is an int
-    | INT_val {if(strcmp(currentType,"int") && part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |%d|, a la ligne %d\n", currentType, $1, yylineo) ;
-                    else
-                        sprintf(currentValue, "%d", $1);}        // Assuming INT_val is an int
-    | STRING_val {if(strcmp(currentType,"string") && part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |%s|, a la ligne %d\n", currentType, $1, yylineo) ;
-                    else
-                        strcpy(currentValue, $1);}
-    | CHAR_val {if(strcmp(currentType,"char") && part_index == 0) 
-                        printf("Erreur Non compatibilité de type entre %s et |%c|, a la ligne %d\n", currentType, $1, yylineo) ;
-                    else
-                        sprintf(currentValue, "'%c'", $1);}     // Assuming CHAR_val is a char
-    ;
+neg_FLOAT_val {
+                strcpy(assignType,"float");
+                SendToCalculator($1,currentOp);
+                sprintf(assignValue,"%f",$1);}
+
+|FLOAT_val {
+                strcpy(assignType,"float");
+                SendToCalculator($1,currentOp);
+                sprintf(assignValue,"%f",$1);}
+
+|_TRUE {
+                strcpy(assignType,"bool");
+                strcpy(assignValue,$1);}
+
+|_FALSE{
+                strcpy(assignType,"bool");
+                strcpy(assignValue,$1);}
+
+|neg_INT_val {
+                strcpy(assignType,"int");
+                SendToCalculator($1,currentOp);
+                sprintf(assignValue,"%d",$1);}
+
+|INT_val {
+                strcpy(assignType,"int");
+                SendToCalculator($1,currentOp); 
+                sprintf(assignValue,"%d",$1);}
+
+|STRING_val {
+                strcpy(assignType,"string");
+                strcpy(assignValue,$1);}
+
+|CHAR_val{
+                strcpy(assignType,"char");
+                strcpy(assignValue,$1);}
 
 
 
-
-//tous les comparateur possibles
-cmp:
-EG|SUP|LES|SUPE|LESE|NOTEG
+// Le printf
+STMT:
+PRINTF OPAR STRING_val SEP IDF CPAR SEMI
+|PRINTF OPAR STRING_val CPAR SEMI
 
 %%
 
