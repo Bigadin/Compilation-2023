@@ -7,12 +7,10 @@ const float W = 32;
 bool Verif = faux;
 BEGIN
 A = 3;
-A = B + 4;
 C = 4 + 5 + 3;
-X = 9 - 5 * 4*A;
 Verif = vrai;
-o = 9;
-for(int I = 5; 5+ 5; i + 4) {
+O = 9;
+for(int I = 5; I<10; I++) {
     Game += I;
     return Game;
 }
@@ -24,7 +22,6 @@ do {
 while (C < 100) {
     C *= 2 ;
     C += 10;
-    B /= 1;
 }
 
 if(A <> C)
@@ -32,15 +29,6 @@ if(A <> C)
     return A+C ;
 }
 
-if (B < W )
-{
-    return !Verif;
-}else if (B == W)
-{
-    return B;
-}else{
-    return Verif;
-}
 
 switch (Choice) {
     case 1:

@@ -9,10 +9,11 @@ Binary = program
 all: $(Binary)
 
 $(Binary): $(FlexFile) $(BisonFile) 
-	$(BB) -d -t $(BisonFile)
 	$(FF) $(FlexFile)
-	$(CC) -std=gnu99 -Wall -o  $@ $(CFile)
+	$(BB) -d -t $(BisonFile)
+	$(CC) -Wall -o  $@ $(CFile) 
 	./program exemple.txt
+	
 
 clean:
 	rm -rf $(Binary) $(CFile)

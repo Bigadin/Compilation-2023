@@ -49,23 +49,23 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    CHAR = 258,
-    STRING = 259,
-    CONST = 260,
-    BOOL = 261,
-    INT = 262,
-    FLOAT = 263,
-    IDF = 264,
-    PLUS = 265,
-    MINUS = 266,
-    MULT = 267,
-    DIV = 268,
-    EG = 269,
-    SUP = 270,
-    LES = 271,
-    LESE = 272,
-    SUPE = 273,
-    AND = 274,
+    IDF = 258,
+    CHAR = 259,
+    STRING = 260,
+    CONST = 261,
+    BOOL = 262,
+    INT = 263,
+    FLOAT = 264,
+    MINUS = 265,
+    MULT = 266,
+    DIV = 267,
+    EG = 268,
+    SUP = 269,
+    LES = 270,
+    LESE = 271,
+    SUPE = 272,
+    AND = 273,
+    NOTEG = 274,
     OR = 275,
     INCR = 276,
     DECR = 277,
@@ -75,39 +75,39 @@ extern int yydebug;
     MinAff = 281,
     MulAff = 282,
     DivAff = 283,
-    _TRUE = 284,
-    _FALSE = 285,
-    NOTEG = 286,
-    BEG = 287,
-    END = 288,
-    RETURN = 289,
-    SEMI = 290,
-    SEP = 291,
-    DeuxPoints = 292,
-    FOR = 293,
-    IF = 294,
-    WHILE = 295,
-    DO = 296,
-    OPAR = 297,
-    CPAR = 298,
-    OPEN = 299,
-    CLOSE = 300,
-    ELSE = 301,
-    BREAK = 302,
-    DEFAULT = 303,
-    CASE = 304,
-    SWITCH = 305,
-    CONTINUE = 306,
-    PRINTF = 307,
-    SBRA = 308,
-    CBRA = 309,
-    neg_FLOAT_val = 310,
-    FLOAT_val = 311,
-    BOOL_val = 312,
-    neg_INT_val = 313,
-    INT_val = 314,
-    STRING_val = 315,
-    CHAR_val = 316
+    BEG = 284,
+    END = 285,
+    RETURN = 286,
+    SEMI = 287,
+    SEP = 288,
+    DeuxPoints = 289,
+    SBRA = 290,
+    CBRA = 291,
+    FOR = 292,
+    IF = 293,
+    WHILE = 294,
+    DO = 295,
+    OPAR = 296,
+    CPAR = 297,
+    OPEN = 298,
+    CLOSE = 299,
+    ELSE = 300,
+    BREAK = 301,
+    DEFAULT = 302,
+    CASE = 303,
+    SWITCH = 304,
+    CONTINUE = 305,
+    PRINTF = 306,
+    neg_FLOAT_val = 307,
+    FLOAT_val = 308,
+    BOOL_val = 309,
+    neg_INT_val = 310,
+    INT_val = 311,
+    STRING_val = 312,
+    CHAR_val = 313,
+    _TRUE = 314,
+    _FALSE = 315,
+    PLUS = 316
   };
 #endif
 
@@ -115,13 +115,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 28 "parser.y"
+#line 51 "parser.y"
 
+    
 int num;
 float real;
 char* sym;
 
-#line 125 "parser.tab.h"
+#line 126 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

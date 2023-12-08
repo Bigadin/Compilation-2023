@@ -1,15 +1,20 @@
-float A = 89.6, K = 89.22; 
-
-
-int C, Q_d = -4,Game;
-
-
-const bool Ma = true;
-const float W = 32.3;
-bool Verif = faux;
-bool  V;
+float Bd = 23 + 12 * 3 - 22 / 4 , NH,Jhh = 6 * 5;
+const bool I = true;
+float Sum, J = 1;
+int Tab[2] = {2,3};
+int Gjjhk[][];
+float Kcc  = 4 + 2;
+const int Kd = 23,Loo = 2,Jus = 43;
+string K__sIud;
 
 BEGIN
-
-Oiiii = 2;
+Bd = 21;
+Kcc ++;
+Kcc ++;
+Sum = 10;
+Sum /= Jhh ;
+Sum --;
+for(int H = 5; H < 10; H++) {
+    return Bd;
+}
 END
