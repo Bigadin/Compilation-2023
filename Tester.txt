@@ -1,0 +1,46 @@
+int A = 12;
+int C,Q_d = 4,Game;
+int Choice = 2;
+float K,L,O;
+const bool Ma = true;
+const float W = 32;
+bool Verif = faux;
+BEGIN
+A = 3;
+C = 4 + 5 + 3;
+Verif = vrai;
+O = 9;
+for(int I = 5; I<10; I++) {
+    Game += I;
+    return Game;
+}
+
+do {
+    A--;
+} while (A > 0);
+
+while (C < 100) {
+    C *= 2 ;
+    C += 10;
+}
+
+if(A <> C)
+{
+    return A+C ;
+}
+
+
+switch (Choice) {
+    case 1:
+        printf("You chose option 1\n");
+        break;
+    case 2:
+        printf("You chose option 2\n");
+        break;
+    case 3:
+        printf("You chose option 3\n");
+        break;
+    default:
+        printf("Invalid choice\n");
+}
+END

@@ -49,51 +49,65 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    CHAR = 258,
-    STRING = 259,
-    CONST = 260,
-    BOOL = 261,
-    INT = 262,
-    FLOAT = 263,
-    IDF = 264,
-    PLUS = 265,
-    MINUS = 266,
-    MULT = 267,
-    DIV = 268,
-    EG = 269,
-    SUP = 270,
-    LES = 271,
-    LESE = 272,
-    SUPE = 273,
-    AND = 274,
+    IDF = 258,
+    CHAR = 259,
+    STRING = 260,
+    CONST = 261,
+    BOOL = 262,
+    INT = 263,
+    FLOAT = 264,
+    MINUS = 265,
+    MULT = 266,
+    DIV = 267,
+    EG = 268,
+    SUP = 269,
+    LES = 270,
+    LESE = 271,
+    SUPE = 272,
+    AND = 273,
+    NOTEG = 274,
     OR = 275,
     INCR = 276,
     DECR = 277,
     ASSIG = 278,
-    _TRUE = 279,
-    _FALSE = 280,
-    NOTEG = 281,
-    BEG = 282,
-    END = 283,
-    RETURN = 284,
-    SEMI = 285,
-    SEP = 286,
-    FOR = 287,
-    IF = 288,
-    WHILE = 289,
-    DO = 290,
-    OPAR = 291,
-    CPAR = 292,
-    OPEN = 293,
-    CLOSE = 294,
-    ELSE = 295,
-    neg_FLOAT_val = 296,
-    FLOAT_val = 297,
-    BOOL_val = 298,
-    neg_INT_val = 299,
-    INT_val = 300,
-    STRING_val = 301,
-    CHAR_val = 302
+    NOT = 279,
+    AddAff = 280,
+    MinAff = 281,
+    MulAff = 282,
+    DivAff = 283,
+    BEG = 284,
+    END = 285,
+    RETURN = 286,
+    SEMI = 287,
+    SEP = 288,
+    DeuxPoints = 289,
+    SBRA = 290,
+    CBRA = 291,
+    FOR = 292,
+    IF = 293,
+    WHILE = 294,
+    DO = 295,
+    OPAR = 296,
+    CPAR = 297,
+    OPEN = 298,
+    CLOSE = 299,
+    ELSE = 300,
+    BREAK = 301,
+    DEFAULT = 302,
+    CASE = 303,
+    SWITCH = 304,
+    CONTINUE = 305,
+    PRINTF = 306,
+    neg_FLOAT_val = 307,
+    FLOAT_val = 308,
+    BOOL_val = 309,
+    neg_INT_val = 310,
+    INT_val = 311,
+    STRING_val = 312,
+    CHAR_val = 313,
+    _TRUE = 314,
+    _FALSE = 315,
+    PLUS = 316
   };
 #endif
 
@@ -101,12 +115,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 20 "parser.y"
+#line 51 "parser.y"
 
+    
 int num;
+float real;
 char* sym;
 
-#line 110 "parser.tab.h"
+#line 126 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

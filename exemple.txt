@@ -1,52 +1,20 @@
-int a = 89,k = 89; 
-float b;
-
-
-int a = 12;
-
-int c, q_d = 4,game;
-float k,l,o;
-
-const bool ma = true;
-const float w = 32;
-bool verif = faux;
+float Bd = 23 + 12 * 3 - 22 / 4 , NH,Jhh = 6 * 5;
+const bool I = vrai;
+float Sum, J = 1;
+int Tab[2] = {2,3};
+int Gjjhk[][];
+float Kcc  = 4 + 2;
+const int Kd = 23,Loo = 2,Jus = 43;
+string F_sIud;
 
 BEGIN
-if(a==43)kj=9000;else           noo=faux ;else if(OPp== 900) make= true;
-if(a == 90) 
-    vallsd= faux;
-if(a < 3){
-
-a = 3;
-a = b + 4;
-if(a == 45){
-    x = X - y_ds;
-    c = vrai;
-    if(a >= b){ 
-        a = op_sd - 34;
-    }else if(c < 34){
-        k = 0;
-        boolean = vrai;
-    }
-    else{
-        bolean = faux;
-    }
-}else{
-    poo = wola + 43;
+Bd = 12;
+Kcc ++;
+Kcc ++;
+Sum = 3;
+Sum /= 10 ;
+Sum--;
+for(int H = 5; H < 10; H++) {
+    return Bd;
 }
-c = 4 + 5 + 3;
-x = 9 - 5 * 4*a,k = 90;
-
-verif = vrai;
-}
-
-a = 3;
-a = b + 4;
-
-c = 4 + 5 + 3;
-x = 9 - 5 * 4*a;
-
-
-verif = vrai;
-
 END
